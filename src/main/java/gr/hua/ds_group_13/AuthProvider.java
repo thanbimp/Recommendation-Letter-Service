@@ -7,24 +7,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Component
-public class AuthProvider implements AuthenticationProvider {
+        @Component public class AuthProvider implements AuthenticationProvider {
+            @Autowired private SecurityUserDetailsService userDetailsService;
+            @Autowired private PasswordEncoder passwordEncoder;
+            @Autowired private UserRepository userRepository;
+            @Override
+            public Authentication authenticate(Authentication authentication)
+                    throws AuthenticationException {
+                return authentication;
+                }
 
-    @Autowired
-    SecurityUserDetailsService securityUserDetailsService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    UserRepository userRepository;
-
-
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return null;
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return false;
-    }
-}
+            @Override public boolean supports(Class<?> authentication) {
+                return true;
+            }
+        }

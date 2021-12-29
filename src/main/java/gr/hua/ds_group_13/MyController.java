@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MyController {
-    @Autowired private SecurityUserDetailsService userDetailsManager;
+    @Autowired
+    private SecurityUserDetailsService userDetailsManager;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -23,6 +26,7 @@ public class MyController {
     public String index() {
         return "index";
     }
+
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpSession session) {
         session.setAttribute(
