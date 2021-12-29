@@ -47,13 +47,15 @@ public class MyController {
     )
     public void addUser(@RequestParam Map<String, String> body) {
         User user = new User();
+        user.setFName(body.get("fname"));
+        user.setLName(body.get("lname"));
         user.setEmail(body.get("email"));
         user.setPassword(passwordEncoder.encode(body.get("password")));
         userDetailsManager.createUser(user);
     }
     private String getErrorMessage(HttpServletRequest request, String key) {
         Exception exception = (Exception) request.getSession().getAttribute(key);
-        String error = "";
+        String error;
         if (exception instanceof BadCredentialsException) {
             error = "Invalid username and password!";
         } else if (exception instanceof LockedException) {

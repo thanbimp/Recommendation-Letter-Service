@@ -16,14 +16,20 @@ public class User implements UserDetails {
     @Id
     private String email;
     private String password;
+    private String FName;
+    private String LName;
+
 
 
     public User(){
 
     }
-    public User(String email, String password) {
+
+    public User(String email, String password, String FName, String LName) {
         this.email = email;
         this.password = password;
+        this.FName = FName;
+        this.LName = LName;
     }
 
     @Override
@@ -72,5 +78,21 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFName() {
+        return FName;
+    }
+
+    public void setFName(String FName) {
+        this.FName = FName;
+    }
+
+    public String getLName() {
+        return LName;
+    }
+
+    public void setLName(String LName) {
+        this.LName = LName;
     }
 }
