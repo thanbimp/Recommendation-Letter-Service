@@ -30,6 +30,12 @@ public class MyController {
         );
         return "login";
     }
+
+    @GetMapping("/dashboard")
+    public String dashboard(){
+        return "dashboard";
+    }
+
     @GetMapping("/register")
     public String register() {
         return "register";

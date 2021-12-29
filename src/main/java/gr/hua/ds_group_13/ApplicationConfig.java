@@ -13,13 +13,19 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http)throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/register**")
-                .permitAll() .anyRequest().authenticated()
+                .authorizeRequests()
+                .antMatchers("/register**").permitAll()
+                .antMatchers("/").permitAll() // This will be your home screen URL
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .formLogin() .loginPage("/login")
+                .formLogin()
+                .defaultSuccessUrl("/dashboard")
+                .loginPage("/login")
                 .permitAll()
                 .and()
                 .logout() .invalidateHttpSession(true)
