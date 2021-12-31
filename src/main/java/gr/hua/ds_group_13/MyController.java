@@ -4,6 +4,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -22,6 +23,7 @@ public class MyController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @GetMapping("/")
     public String index() {
         return "index";
@@ -34,6 +36,7 @@ public class MyController {
         );
         return "login";
     }
+
 
     @GetMapping("/dashboard")
     public String dashboard(){
