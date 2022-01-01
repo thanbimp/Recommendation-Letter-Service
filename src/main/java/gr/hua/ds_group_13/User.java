@@ -18,6 +18,12 @@ public class User implements UserDetails {
     private String password;
     private String FName;
     private String LName;
+    /* Account Types:
+    0:Student
+    1:Professor
+    2:Admin (must be set manually in DB)
+     */
+    private short AccType;
 
 
 
@@ -25,11 +31,12 @@ public class User implements UserDetails {
 
     }
 
-    public User(String email, String password, String FName, String LName) {
+    public User(String email, String password, String FName, String LName,short AccType) {
         this.email = email;
         this.password = password;
         this.FName = FName;
         this.LName = LName;
+        this.AccType=AccType;
     }
 
     @Override
@@ -94,5 +101,13 @@ public class User implements UserDetails {
 
     public void setLName(String LName) {
         this.LName = LName;
+    }
+
+    public short getAccType() {
+        return AccType;
+    }
+
+    public void setAccType(short accType) {
+        AccType = accType;
     }
 }
