@@ -49,7 +49,7 @@ public class Application {
     }
 
     public void setBody(String body) {
-        Body = body;
+        this.Body = body;
     }
 
     public String getStudFName() {
@@ -57,7 +57,7 @@ public class Application {
     }
 
     public void setStudFName(String studFName) {
-        StudFName = studFName;
+        this.StudFName = studFName;
     }
 
     public String getStudLName() {
@@ -65,7 +65,7 @@ public class Application {
     }
 
     public void setStudLName(String studLName) {
-        StudLName = studLName;
+        this.StudLName = studLName;
     }
 
     public Boolean getAccepted() {
