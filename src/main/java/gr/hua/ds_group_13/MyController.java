@@ -3,6 +3,7 @@ package gr.hua.ds_group_13;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,20 @@ public class MyController {
     public void addNewLetter(@RequestParam Map<String, String> body) {
        Letter letter = new Letter(body.get("fName"),body.get("lName"),body.get("body"),applicationRepository.getById(body.get("appID")));
        letterRepository.save(letter);
+    }
+
+    @PostMapping(
+            value="/send_letter",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    )
+    @ResponseBody
+    public void sendLetter(@RequestParam Map<String, String> body){
+        try {
+            EmailSender.SendEmail(letterRepository.getById(body.get("letterID")),"NEEDS TO RETRIEVE EMAIL TO SEND TO");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 
