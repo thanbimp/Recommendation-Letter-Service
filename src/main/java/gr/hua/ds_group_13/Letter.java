@@ -1,9 +1,7 @@
 package gr.hua.ds_group_13;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +10,9 @@ public class Letter {
 
     @Id
     private String id;
+    @ManyToOne
+    @JoinColumn (name="app_id")
+    private Application AppID;
     private String profFName;
     private String profLName;
     private String body;
@@ -20,7 +21,8 @@ public class Letter {
 
     }
 
-    public Letter(String profFName, String profLName, String body) {
+    public Letter(String profFName, String profLName, String body,Application AppId) {
+        this.AppID=AppId;
         this.id = UUID.randomUUID().toString();
         this.profFName = profFName;
         this.profLName = profLName;
@@ -40,7 +42,7 @@ public class Letter {
     }
 
     public void setProfFName(String profFName) {
-        profFName = profFName;
+        this.profFName = profFName;
     }
 
     public String getProfLName() {

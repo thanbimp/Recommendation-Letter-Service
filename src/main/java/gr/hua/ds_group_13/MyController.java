@@ -1,6 +1,8 @@
 package gr.hua.ds_group_13;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MyController {
@@ -34,6 +34,7 @@ public class MyController {
         return "index";
     }
 
+
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpSession session) {
         session.setAttribute(
@@ -47,6 +48,7 @@ public class MyController {
     public String dashboard(){
         return "dashboard";
     }
+
 
     @GetMapping("/register")
     public String register() {
@@ -62,25 +64,59 @@ public class MyController {
         userDetailsManager.createUser(user);
     }
 
+
     @PostMapping(
             value="/application",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
+    @ResponseBody
     public void addNewApplication(@RequestParam Map<String, String> body){
         Application application=new Application(body.get("profEmail"),body.get("appBody"),body.get("fName"),body.get("lName"));
         applicationRepository.save(application);
     }
 
+
     @PostMapping(
-            value="/letter",
+            value="/add_letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
+    @ResponseBody
     public void addNewLetter(@RequestParam Map<String, String> body) {
-       Letter letter = new Letter(body.get("fName"),body.get("lName"),body.get("body"));
+       Letter letter = new Letter(body.get("fName"),body.get("lName"),body.get("body"),applicationRepository.getById(body.get("appID")));
        letterRepository.save(letter);
     }
+
+
+    @GetMapping(
+            value = "/profApplications",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public List<Application> getApplicationsByProfEmail(@RequestParam Map<String, String> body){
+        List<Application> AllApplications = applicationRepository.findAll();
+        List<Application> ProfApplications = AllApplications.stream().filter(o -> o.getProfEmail().equals(body.get("email"))).collect(Collectors.toList());
+        return ProfApplications;
+    }
+
+
+    @PatchMapping
+            (value = "/application",
+            consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
+    public void ApproveApplication(@RequestParam Map<String, String> body){
+        String appID= body.get("appID");
+        Boolean accept= Boolean.parseBoolean(body.get("accepted"));
+        Application tempApplication= applicationRepository.getById(appID);
+        if (accept){
+            tempApplication.setAccepted(true);
+            applicationRepository.save(tempApplication);
+        }
+        else applicationRepository.delete(tempApplication);
+    }
+
+
 
     private String getErrorMessage(HttpServletRequest request, String key) {
         Exception exception = (Exception) request.getSession().getAttribute(key);

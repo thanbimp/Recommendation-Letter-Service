@@ -14,6 +14,7 @@ public class Application {
     private String Body;
     private String StudFName;
     private String StudLName;
+    private Boolean Accepted;
 
     public Application(){
 
@@ -40,7 +41,7 @@ public class Application {
     }
 
     public void setProfEmail(String profEmail) {
-        profEmail = profEmail;
+        this.profEmail = profEmail;
     }
 
     public String getBody() {
@@ -65,6 +66,14 @@ public class Application {
 
     public void setStudLName(String studLName) {
         StudLName = studLName;
+    }
+
+    public Boolean getAccepted() {
+        return Accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        Accepted = accepted;
     }
 }
 
