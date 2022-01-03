@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+
+body{
+    background-color: #e5e5f7;
+    opacity: 1;
+    background-image:  linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877);
+    background-size: 46px 81px;
+    background-position: 0 0, 0 0, 23px 40px, 23px 40px, 0 0, 23px 40px;
+}
+
+div{
+    text-align: center;
+    width: 60%;
+    margin: auto;
+    margin-top: 10vw;
+    border-radius: 25px;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+button{
+    background-color: #a7d2b8;
+    font-size: 12px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+}
+button:hover {
+    background-color: #9ef1c0; /* Green */
+    color: #000000;
+}
+
+.text{
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 24px;
+}
+.titleText{
+    font-size: 96px;
+    font-family: 'Pacifico', cursive;
+}
+
+.errorDiv{
+    background-color: #ff4646;
+    padding: 20px;
+}
+
+.textBox{
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
