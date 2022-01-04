@@ -10,6 +10,7 @@
 </div>
 <div  class="text" th:if="${param.logout}">You have been logged out.</div>
 <div>
+    <p class="titleText">Login</p>
 <form th:action="@{/login}" method="post">
     <input type="email" placeholder="E-Mail Address" name="email" class="textBox" /> </label>
     <br>

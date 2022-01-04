@@ -18,6 +18,7 @@ public class User implements UserDetails {
     private String password;
     private String FName;
     private String LName;
+    private String PhoneNo;
     /* Account Types:
     0:Student
     1:Professor
@@ -31,12 +32,13 @@ public class User implements UserDetails {
 
     }
 
-    public User(String email, String password, String FName, String LName,short AccType) {
+    public User(String email, String password, String FName, String LName,short AccType,String PhoneNo) {
         this.email = email;
         this.password = password;
         this.FName = FName;
         this.LName = LName;
         this.AccType=AccType;
+        this.PhoneNo=PhoneNo;
     }
 
     @Override
