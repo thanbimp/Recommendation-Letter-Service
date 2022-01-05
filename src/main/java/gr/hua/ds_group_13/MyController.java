@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,13 @@ public class MyController {
 
     @GetMapping("/dashboard")
     public String dashboard(){
-        return "dashboard";
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (authUser.getAccType() == 0){
+            return "dashboard";
+        }else{
+            return "admin_dashboard";
+        }
+
     }
 
 
@@ -162,6 +169,21 @@ public class MyController {
     public List<Application> getApplicationsByProfEmail(@RequestParam Map<String, String> body){
         List<Application> AllApplications = applicationRepository.findAll();
         List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getFromMail().equals(body.get("email"))).collect(Collectors.toList());
+        return FilteredApplications;
+    }
+
+    //TODO: Rename this or the above mapping?
+    //also maybe security leak? because anyone can send GET request and get applications?
+    @GetMapping(
+            value = "/myApplicationsProf",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public List<Application> getApplicationsForProf(@RequestParam Map<String, String> body){
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Application> AllApplications = applicationRepository.findAll();
+        //only return applications to the professor
+        List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getProfEmail().equals(authUser.getEmail())).collect(Collectors.toList());
         return FilteredApplications;
     }
 
