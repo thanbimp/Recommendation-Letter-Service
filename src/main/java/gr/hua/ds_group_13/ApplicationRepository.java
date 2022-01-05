@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, String> {
-    Optional<Application> findApplicationByProfEmail(String ProfEmail);
+    Optional<Application> findApplicationByAppId(String AppId);
 }

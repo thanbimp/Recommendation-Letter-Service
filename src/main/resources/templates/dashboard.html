@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
+  <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
+  <script src="/js/dashboard_student.js"></script>
   <title>
     Logged In!
   </title>
 </head>
-<body>
-<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-  <input type="submit" value="Sign Out"/>
-</form>
+<body onload= "init()">
+<div class="topnav">
+  <a href="/applications">My Applications</a>
+  <a href="/profile">My Profile</a>
+  <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
+  <form class="logoutBtn" th:action="@{/logout}" method="post">
+    <input class="button" type="submit" value="Sign Out"/>
+  </form>
+</div>
+<div class="maindiv">
+  <div id="listDiv"></div>
+  <div id="detailsDiv"></div>
+</div>
+<button id="newAppBtn" onclick="window.location.href='new_application'">New Application</button>
 </body>
 </html>

@@ -3,37 +3,56 @@ package gr.hua.ds_group_13;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
 @Table(name = "applications")
 public class Application {
     @Id
-    private String AppId;
+    private String appId;
+    private String fromMail;
     private String profEmail;
     private String Body;
     private String StudFName;
     private String StudLName;
     private Boolean Accepted;
+    private String timeStamp;
 
     public Application(){
 
     }
 
-    public Application(String profEmail, String body, String studFName, String studLName) {
-        AppId = UUID.randomUUID().toString();
+
+
+    public Application(String profEmail, String body, String studFName, String studLName,String fromMail) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.timeStamp=dtf.format(now);
+        this.fromMail=fromMail;
+        this.appId = UUID.randomUUID().toString();
         this.profEmail = profEmail;
         Body = body;
         StudFName = studFName;
         StudLName = studLName;
     }
 
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     public String getAppId() {
-        return AppId;
+        return appId;
     }
 
     public void setAppId(String appId) {
-        AppId = appId;
+        this.appId = appId;
     }
 
     public String getProfEmail() {
@@ -74,6 +93,14 @@ public class Application {
 
     public void setAccepted(Boolean accepted) {
         Accepted = accepted;
+    }
+
+    public String getFromMail() {
+        return fromMail;
+    }
+
+    public void setFromMail(String fromMail) {
+        this.fromMail = fromMail;
     }
 }
 

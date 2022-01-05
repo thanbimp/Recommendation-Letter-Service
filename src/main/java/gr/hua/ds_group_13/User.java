@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 
@@ -40,6 +42,8 @@ public class User implements UserDetails {
         this.AccType=AccType;
         this.PhoneNo=PhoneNo;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -111,5 +115,13 @@ public class User implements UserDetails {
 
     public void setAccType(short accType) {
         AccType = accType;
+    }
+
+    public String getPhoneNo() {
+        return PhoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        PhoneNo = phoneNo;
     }
 }

@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+
+body{
+    text-align: center;
+    background-color: #e5e5f7;
+    opacity: 1;
+    background-image:  linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877);
+    background-size: 46px 81px;
+    background-position: 0 0, 0 0, 23px 40px, 23px 40px, 0 0, 23px 40px;
+}
+
+.emailtext{
+    display: inline;
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+    padding: 14px 16px;
+}
+
+.logoutBtn{
+    display: inline;
+    text-align: center;
+    padding: 14px 16px;
+}
+.topnav {
+    background-color: #ffffff;
+    overflow: hidden;
+    list-style-type: none;
+    margin: 0;
+    text-align: right;
+    padding: 0;
+}
+
+li:hover{
+    background-color: #a7d2b8;
+    color: black;
+}
+
+li:active{
+    background-color: #a7d2b8;
+    color: black;
+}
+.topnav a {
+    float: left;
+    font-family: 'Ubuntu', sans-serif;
+    color: #000000;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #a7d2b8;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+#detailsDiv{
+    flex: 2;
+}
+
+#listDiv{
+    flex: 1;
+    border-right: 4px solid black ;
+}
+
+
+#newAppDiv{
+    flex:1;
+}
+
+#newAppBtn{
+    display: block;
+}
+
+.maindiv{
+    display: flex;
+    width: 60%;
+    margin: auto;
+    margin-top: 10vw;
+    border-radius: 25px;
+    background-color: #ffffff;
+    font-family: 'Ubuntu', sans-serif;
+    padding: 10px;
+}
+
+.button{
+    background-color: #a7d2b8;
+    font-size: 12px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+}
+.button:hover {
+    background-color: #9ef1c0; /* Green */
+    color: #000000;
+}
+
+.text{
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 24px;
+}
+
+#newAppBtn{
+    display: block;
+    margin-top: 15px;
+    margin-left: 50vw;
+    position: fixed;
+    background-color: #ffffff;
+    font-size: 12px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: #04AA6D;
+}
+
+#newAppBtn:hover{
+    background-color: #9ef1c0; /* Green */
+    color: #000000;
+}
+
+#newAppBtn:active{
+    background-color: #9ef1c0; /* Green */
+    color: #000000;
+}

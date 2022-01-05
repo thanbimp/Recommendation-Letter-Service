@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MyController {
+
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private SecurityUserDetailsService userDetailsManager;
@@ -60,26 +65,71 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
     )
-    public void addUser(@RequestParam Map<String, String> body) {
+    public String addUser(@RequestParam Map<String, String> body,HttpSession session) {
         User user = new User(body.get("email"),passwordEncoder.encode(body.get("password")),body.get("fname"),body.get("lname"),(short) Integer.parseInt(body.get("accType")),body.get("phoneNo"));
         userDetailsManager.createUser(user);
+        session.setAttribute("registered",true);
+        return "redirect:/login";
     }
 
+
+    @GetMapping(
+            value = "/user",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    private User getUser(@RequestParam Map<String, String> body){
+        return userRepository.findUserByEmail(body.get("email")).get();
+    }
+    @GetMapping(
+            value = "/application",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    private Application getApplication(@RequestParam Map<String, String> body){
+        Application application=applicationRepository.findApplicationByAppId(body.get("appId")).get();
+        return application;
+    }
 
     @PostMapping(
             value="/application",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
-    @ResponseBody
-    public void addNewApplication(@RequestParam Map<String, String> body){
-        Application application=new Application(body.get("profEmail"),body.get("appBody"),body.get("fName"),body.get("lName"));
-        applicationRepository.save(application);
+    public String addNewApplication(@RequestParam Map<String, String> body,HttpSession session){
+        if(!userRepository.findUserByEmail(body.get("profEmail")).isEmpty()){
+            if(userRepository.findUserByEmail(body.get("profEmail")).get().getAccType()==0){
+                session.setAttribute("succ",false);
+                return "/new_application";
+            }
+            else {
+                Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"));
+                applicationRepository.save(application);
+                session.setAttribute("succ", true);
+                return "redirect:/dashboard";
+            }
+        }
+        else{
+            session.setAttribute("fail",true);
+            return "/new_application";
+        }
     }
 
 
+    @GetMapping(
+            value = "/new_application"
+    )
+    public String newApplication(){
+        return "/new_application";
+    }
+
+    @GetMapping(
+            value="/applications"
+    )
+    public String applications(){
+        return "/dashboard";
+    }
     @PostMapping(
-            value="/add_letter",
+            value="/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
@@ -89,8 +139,8 @@ public class MyController {
        letterRepository.save(letter);
     }
 
-    @PostMapping(
-            value="/send_letter",
+    @PatchMapping(
+            value="/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     @ResponseBody
@@ -105,14 +155,14 @@ public class MyController {
 
 
     @GetMapping(
-            value = "/profApplications",
+            value = "/myApplications",
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
     public List<Application> getApplicationsByProfEmail(@RequestParam Map<String, String> body){
         List<Application> AllApplications = applicationRepository.findAll();
-        List<Application> ProfApplications = AllApplications.stream().filter(o -> o.getProfEmail().equals(body.get("email"))).collect(Collectors.toList());
-        return ProfApplications;
+        List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getFromMail().equals(body.get("email"))).collect(Collectors.toList());
+        return FilteredApplications;
     }
 
 

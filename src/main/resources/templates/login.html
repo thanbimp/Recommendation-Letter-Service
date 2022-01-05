@@ -9,6 +9,7 @@
   <p class="text" th:text="${session.error}" th:unless="${session == null}">[...]</p>
 </div>
 <div  class="text" th:if="${param.logout}">You have been logged out.</div>
+<div  class="text" th:if="${session.registered}">You have been successfully registered! Please log in.</div>
 <div>
     <p class="titleText">Login</p>
 <form th:action="@{/login}" method="post">
