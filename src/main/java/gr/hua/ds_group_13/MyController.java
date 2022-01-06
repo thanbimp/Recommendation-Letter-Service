@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class MyController {
         if (authUser.getAccType() == 0){
             return "dashboard";
         }else{
-            return "admin_dashboard";
+            return "professor_dashboard";
         }
 
     }
@@ -166,7 +165,7 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public List<Application> getApplicationsByProfEmail(@RequestParam Map<String, String> body){
+    public List<Application> getApplicationsByEmail(@RequestParam Map<String, String> body){
         List<Application> AllApplications = applicationRepository.findAll();
         List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getFromMail().equals(body.get("email"))).collect(Collectors.toList());
         return FilteredApplications;
