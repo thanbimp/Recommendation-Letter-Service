@@ -8,20 +8,20 @@
 </head>
 <body>
 <div class="topnav">
-    <a href="/applications">My Applications</a>
+    <a href="/dashboard">My Applications</a>
     <a href="/profile">My Profile</a>
     <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
     <form class="logoutBtn" th:action="@{/logout}" method="post">
         <input class="button" type="submit" value="Sign Out"/>
     </form>
 </div>
-<div  class="maindiv" th:if="${session.fail}">Hmm... We werent able to find this professor <br> Make sure that the email is correct,or ask them to sign up</div>
+<div  class="maindiv" style="background-color: #ff4646" th:if="${(param.succ != null)}">Hmm... We weren't able to find this professor.<br> Make sure that the email is correct,or ask them to sign up.</div>
 <div class="maindiv">
         <input class="textBox" type="email" placeholder="Enter the professors email" name="profEmail" id="profEmail" required>
         <br>
         <input class="bigTextBox" type="text" placeholder="Write something about this application..." name="appBody" id="appBody" required>
         <br>
-        <button  onclick="submit()">Submit</button>
+        <button  class="button" onclick="submit()">Submit</button>
 </div>
 </body>
 </html>

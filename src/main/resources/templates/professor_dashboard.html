@@ -4,12 +4,12 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
     <script src="/js/dashboard_professor.js"></script>
     <title>
-        Logged In!
+        My Applications
     </title>
 </head>
 <body onload= "init()">
 <div class="topnav">
-    <a href="/applications">My Applications</a>
+    <a href="/dashboard">My Applications</a>
     <a href="/profile">My Profile</a>
     <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
     <form class="logoutBtn" th:action="@{/logout}" method="post">
@@ -20,6 +20,5 @@
     <div id="listDiv"></div>
     <div id="detailsDiv"></div>
 </div>
-<button id="denyBtn" class="button" onclick="acceptApplication(false)">Deny Application</button> <button id="acceptBtn" class="button" onclick="acceptApplication(true)">Accept Application</button>
 </body>
 </html>

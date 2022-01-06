@@ -4,22 +4,23 @@
   <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
   <script src="/js/dashboard_student.js"></script>
   <title>
-    Logged In!
+    My Applications
   </title>
 </head>
 <body onload= "init()">
 <div class="topnav">
-  <a href="/applications">My Applications</a>
+  <a href="/dashboard">My Applications</a>
   <a href="/profile">My Profile</a>
   <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
   <form class="logoutBtn" th:action="@{/logout}" method="post">
     <input class="button" type="submit" value="Sign Out"/>
   </form>
 </div>
+<div  class="maindiv" style="text-align: center" th:if="${(param.succ != null)}">Application sent successfully!</div>
 <div class="maindiv">
   <div id="listDiv"></div>
   <div id="detailsDiv"></div>
 </div>
-<button id="newAppBtn" onclick="window.location.href='new_application'">New Application</button>
+<button class="button" id="newAppBtn" onclick="window.location.href='new_application'">New Application</button>
 </body>
 </html>

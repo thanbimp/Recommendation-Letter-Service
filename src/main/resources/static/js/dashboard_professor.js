@@ -54,16 +54,31 @@ function renderApplication(application){
     var acceptedPar=document.createElement("p");
     if(application.accepted===null){
         acceptedPar.innerText="Accepted:No";
+        var acceptBtn=document.createElement("button");
+        acceptBtn.setAttribute("class","button");
+        acceptBtn.setAttribute("onclick","acceptApplication(true)");
+        acceptBtn.innerText="Accept Application";
     }
     else {
         acceptedPar.innerText="Accepted:Yes";
+        var acceptBtn=document.createElement("button");
+        acceptBtn.setAttribute("class","button");
+        acceptBtn.setAttribute("onclick","alert(\"Redirect to letter write page!\")");
+        acceptBtn.innerText="Write Letter";
     }
     var bodyPar=document.createElement("p");
     bodyPar.innerText="Application Body:\n"+application.body+"\n";
+    var denyBtn=document.createElement("button");
+    denyBtn.setAttribute("class","button");
+    denyBtn.setAttribute("onclick","acceptApplication(false)");
+    denyBtn.setAttribute("style","background-color:#ff4646");
+    denyBtn.innerText="Decline Application";
     detailsDiv.appendChild(namePar);
     detailsDiv.appendChild(profToPar);
     detailsDiv.appendChild(acceptedPar);
     detailsDiv.appendChild(bodyPar);
+    detailsDiv.appendChild(acceptBtn);
+    detailsDiv.appendChild(denyBtn);
 }
 
 function acceptApplication(result){
@@ -71,5 +86,7 @@ function acceptApplication(result){
     xhr.open("PATCH","/application");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("accepted="+result+"&appID="+currentSelectedApplicationID);
-    //TODO:here need to clear the application list and redraw
+    document.getElementById("listDiv").innerHTML="";
+    document.getElementById("detailsDiv").innerHTML=""
+    setTimeout(function (){init()},50);
 }

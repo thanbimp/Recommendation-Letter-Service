@@ -97,26 +97,21 @@ public class MyController {
         return application;
     }
 
-    @PostMapping(
-            value="/application",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
-    public String addNewApplication(@RequestParam Map<String, String> body,HttpSession session){
+    @PostMapping(value="/application")
+    @ResponseBody
+    public String addNewApplication(@RequestParam Map<String, String> body){
         if(!userRepository.findUserByEmail(body.get("profEmail")).isEmpty()){
             if(userRepository.findUserByEmail(body.get("profEmail")).get().getAccType()==0){
-                session.setAttribute("succ",false);
-                return "/new_application";
+                return "false";
             }
             else {
                 Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"));
                 applicationRepository.save(application);
-                session.setAttribute("succ", true);
-                return "redirect:/dashboard";
+                return "true";
             }
         }
         else{
-            session.setAttribute("fail",true);
-            return "/new_application";
+            return "false";
         }
     }
 
@@ -128,12 +123,7 @@ public class MyController {
         return "/new_application";
     }
 
-    @GetMapping(
-            value="/applications"
-    )
-    public String applications(){
-        return "/dashboard";
-    }
+
     @PostMapping(
             value="/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,

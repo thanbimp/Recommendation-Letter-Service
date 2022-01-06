@@ -15,4 +15,12 @@ function parseDataAndSubmit(user,profEmail,body){
     xhttp.open("POST", "/application");
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.send("profEmail="+profEmail+"&appBody="+body+"&fname="+fname+"&lname="+lname+"&fromMail="+fromMail);
+    xhttp.onload=function (){
+        if (xhttp.responseText==="true"){
+            window.location.href = "/dashboard?succ=true";
+        }
+        else{
+            window.location.href = "/new_application?succ=false";
+        }
+    }
 }
