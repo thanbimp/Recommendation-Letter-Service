@@ -22,7 +22,7 @@ body{
     padding: 14px 16px;
 }
 .topnav {
-    background-color: #ffffff;
+    background-color: #fafffb;
     overflow: hidden;
     list-style-type: none;
     margin: 0;
@@ -85,7 +85,7 @@ li:active{
     margin: auto;
     margin-top: 10vw;
     border-radius: 25px;
-    background-color: #ffffff;
+    background-color: #fafffb;
     font-family: 'Ubuntu', sans-serif;
     padding: 10px;
 }
@@ -112,7 +112,7 @@ li:active{
     margin-top: 15px;
     margin-left: 50vw;
     position: fixed;
-    background-color: #ffffff;
+    background-color: #fafffb;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
