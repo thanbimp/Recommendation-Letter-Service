@@ -22,7 +22,7 @@ body{
     padding: 14px 16px;
 }
 .topnav {
-    background-color: #ffffff;
+    background-color: #fafffb;
     overflow: hidden;
     list-style-type: none;
     margin: 0;
@@ -36,7 +36,7 @@ body{
     margin: auto;
     margin-top: 10vw;
     border-radius: 25px;
-    background-color: #ffffff;
+    background-color: #fafffb;
     font-family: 'Ubuntu', sans-serif;
     padding: 10px;
 }
