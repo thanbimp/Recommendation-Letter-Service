@@ -12,6 +12,8 @@ function getApplications(email){
     }
 }
 
+var currentSelectedApplicationID;
+
 function makeApplicationsArray(responseText) {
     let as = JSON.parse(responseText);
     makeList(as);
@@ -36,7 +38,9 @@ function onApplicationClicked(id){
     xhttp.open("GET", "/application?appId="+id);
     xhttp.send();
     xhttp.onload =function(){
+        currentSelectedApplicationID = id;
         renderApplication(JSON.parse(xhttp.responseText));
+
     }
 }
 
@@ -60,4 +64,12 @@ function renderApplication(application){
     detailsDiv.appendChild(profToPar);
     detailsDiv.appendChild(acceptedPar);
     detailsDiv.appendChild(bodyPar);
+}
+
+function acceptApplication(result){
+    var xhr = new XMLHttpRequest();
+    xhr.open("PATCH","/application");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("accepted="+result+"&appID="+currentSelectedApplicationID);
+    //TODO:here need to clear the application list and redraw
 }
