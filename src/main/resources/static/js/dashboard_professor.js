@@ -63,7 +63,7 @@ function renderApplication(application){
         acceptedPar.innerText="Accepted:Yes";
         var acceptBtn=document.createElement("button");
         acceptBtn.setAttribute("class","button");
-        acceptBtn.setAttribute("onclick","alert(\"Redirect to letter write page!\")");
+        acceptBtn.setAttribute("onclick","redirectToLetterPage()");
         acceptBtn.innerText="Write Letter";
     }
     var bodyPar=document.createElement("p");
@@ -89,4 +89,9 @@ function acceptApplication(result){
     document.getElementById("listDiv").innerHTML="";
     document.getElementById("detailsDiv").innerHTML=""
     setTimeout(function (){init()},50);
+}
+
+function redirectToLetterPage(){
+    window.location.href="/write_letter?appID="+currentSelectedApplicationID;
+
 }

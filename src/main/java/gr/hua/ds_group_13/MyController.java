@@ -2,6 +2,7 @@ package gr.hua.ds_group_13;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -149,6 +150,10 @@ public class MyController {
         }
     }
 
+    @GetMapping(value = "/write_letter")
+    public String showWriteLetter(@RequestParam String appID){
+        return "write_letter";
+    }
 
     @GetMapping(
             value = "/myApplications",
@@ -176,6 +181,14 @@ public class MyController {
         return FilteredApplications;
     }
 
+    @GetMapping(value = "/applicationByID",
+                produces=MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Application getApplicationByID(@RequestParam String appID){
+       Optional<Application> application = applicationRepository.findById(appID);
+       //need to do this cause of optional class
+       return application.get();
+    }
 
     @PatchMapping
             (value = "/application",
