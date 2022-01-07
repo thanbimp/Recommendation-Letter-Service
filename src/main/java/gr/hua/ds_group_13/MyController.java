@@ -203,6 +203,7 @@ public class MyController {
                 produces=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Application getApplicationByID(@RequestParam String appID){
+        //TODO: change it here so if application is not found return an error
        Optional<Application> application = applicationRepository.findById(appID);
        //need to do this cause of optional class
        return application.get();

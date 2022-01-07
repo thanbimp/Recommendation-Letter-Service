@@ -6,6 +6,11 @@
     <script src="/js/write_letter.js"></script>
 </head>
 <body onload="getApplication()">
-THIS IS THE LETTER WRITE :D
+<label for="letterBody">Letter Body:</label>
+<br>
+<textarea id="letterBody" name="letterBody" rows="4" cols="50">
+Write the main body here
+</textarea>
+<button id="sendLetterBtn" onclick="sendLetter()">Send Letter</button>
 </body>
 </html>
