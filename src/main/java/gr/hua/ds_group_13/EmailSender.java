@@ -1,7 +1,14 @@
 package gr.hua.ds_group_13;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -11,35 +18,44 @@ import javax.mail.internet.MimeMultipart;
 import java.io.*;
 import java.util.Properties;
 
+@Service
+@EnableConfigurationProperties(EmailSenderProperties.class)
 public class EmailSender {
 
+    @Autowired
+    private EmailSenderProperties emailSenderProperties;
 
+    private String email;
+    private String password;
 
-    public static void SendEmail(Letter letter,String To) throws MessagingException {
+    public void SendEmail(Letter letter) throws MessagingException {
+
+        email=emailSenderProperties.getEmail();
+        password=emailSenderProperties.getPassword();
         // Get system properties
         Properties properties = System.getProperties();
 
         // Setup mail server
         //Settings for GMAIL
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.host", this.emailSenderProperties.getSmtpServer());
+        properties.put("mail.smtp.port", this.emailSenderProperties.getSmtpPort());
+        properties.put("mail.smtp.ssl.enable", this.emailSenderProperties.getSmtpSSL());
+        properties.put("mail.smtp.auth", this.emailSenderProperties.getSmtpAuth());
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("EMAIL HERE", "PASSWORD HERE");
+                return new PasswordAuthentication(email, password);
             }
         });
 
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("EMAIL FROM HERE"));
+        message.setFrom(new InternetAddress(email));
         message.setRecipients(
-                Message.RecipientType.TO, InternetAddress.parse(To));
-        message.setSubject("SUBJECT HERE");
+                Message.RecipientType.TO, InternetAddress.parse(letter.getReceiverEmail()));
+        message.setSubject("New Reccomendation letter!");
 
-        String msg = "BODY HERE";
+        String msg = "Hello,<br>You have received a new recommendation letter.<br>Please see the attached PDF file.<br>Thank you!" ;
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
@@ -62,17 +78,15 @@ public class EmailSender {
         Transport.send(message);
     }
 
-    public static File CreatePDF(String LetterBody, String ProfFName, String ProfLName) throws DocumentException, FileNotFoundException {
+    public static File CreatePDF(String LetterBody, String ProfFName, String ProfLName) throws DocumentException, IOException {
         Document document = new Document();
-        PdfWriter.getInstance(document,new FileOutputStream("Temp.pdf"));
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Temp.pdf"));
         document.open();
-        Font MainFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK);
-        Font NameFont=  FontFactory.getFont(FontFactory.HELVETICA_BOLD,16,BaseColor.BLACK);
-        Chunk MainChunk = new Chunk(LetterBody+"\n\n\n",MainFont);
-        Chunk NameChunk=new Chunk(ProfFName+" "+ProfLName,NameFont);
-        document.add(MainChunk);
-        document.add(NameChunk);
+        BaseFont bf = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        document.add(new Paragraph(LetterBody,new Font(bf,12)));
+        document.add(new Paragraph("\n\n\n\n\n\n"+ProfFName+" "+ProfLName,new Font(bf,18)));
         document.close();
+        writer.close();
         return new File("Temp.pdf");
     }
 }

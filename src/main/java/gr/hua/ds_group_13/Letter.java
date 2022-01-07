@@ -9,32 +9,50 @@ import java.util.UUID;
 public class Letter {
 
     @Id
-    private String id;
-    @ManyToOne
+    private String letter_id;
+    @OneToOne
     @JoinColumn (name="app_id")
     private Application AppID;
     private String profFName;
     private String profLName;
     private String body;
+    private String receiverEmail;
 
     public Letter(){
 
     }
 
-    public Letter(String profFName, String profLName, String body,Application AppId) {
+    public Letter(String profFName, String profLName, String body,Application AppId,String receiverEmail) {
         this.AppID=AppId;
-        this.id = UUID.randomUUID().toString();
+        this.letter_id = UUID.randomUUID().toString();
         this.profFName = profFName;
         this.profLName = profLName;
         this.body = body;
+        this.receiverEmail=receiverEmail;
     }
 
     public String getId() {
-        return id;
+        return letter_id;
+    }
+
+    public Application getAppID() {
+        return AppID;
+    }
+
+    public void setAppID(Application appID) {
+        AppID = appID;
+    }
+
+    public String getReceiverEmail() {
+        return receiverEmail;
+    }
+
+    public void setReceiverEmail(String receiverEmail) {
+        this.receiverEmail = receiverEmail;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.letter_id = id;
     }
 
     public String getProfFName() {
@@ -59,5 +77,13 @@ public class Letter {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getLetter_id() {
+        return letter_id;
+    }
+
+    public void setLetter_id(String letter_id) {
+        this.letter_id = letter_id;
     }
 }

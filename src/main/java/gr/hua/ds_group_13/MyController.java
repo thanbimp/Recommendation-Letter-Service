@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MyController {
-
+    @Autowired
+    EmailSender emailSender;
 
     @Autowired
     private UserRepository userRepository;
@@ -95,7 +96,7 @@ public class MyController {
     )
     @ResponseBody
     private Application getApplication(@RequestParam Map<String, String> body){
-        return applicationRepository.findApplicationByAppId(body.get("appId")).get();
+        return applicationRepository.findApplicationByAppId(body.get("appID")).get();
     }
 
     @PostMapping(value="/application")
@@ -106,7 +107,7 @@ public class MyController {
                 return "false";
             }
             else {
-                Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"));
+                Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"),body.get("toMail"));
                 applicationRepository.save(application);
                 return "true";
             }
@@ -125,6 +126,19 @@ public class MyController {
     }
 
 
+    @GetMapping(
+            value="/letter",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public String getLetter(@RequestParam Map<String, String> body){
+        if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()) {
+            return letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get().getBody();
+        }
+        return null;
+    }
+
+
     @PostMapping(
             value="/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
@@ -133,8 +147,18 @@ public class MyController {
     @ResponseBody
     public void addNewLetter(@RequestParam Map<String, String> body,HttpServletResponse response) {
         if(checkIfProfessor()) {
-            Letter letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")));
+            Letter letter=null;
+            if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()){
+                letter=letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get();
+                letter.setBody(body.get("body"));
+            }
+            else{
+                letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")),body.get("receiverEmail"));
+            }
             letterRepository.save(letter);
+            Application relatedApplication=applicationRepository.getById(body.get("appID"));
+            relatedApplication.setLetterId(letter.getId());
+            applicationRepository.save(relatedApplication);
         }
         else {
             response.setStatus(403);
@@ -149,7 +173,10 @@ public class MyController {
     public void sendLetter(@RequestParam Map<String, String> body,HttpServletResponse response){
         if(checkIfProfessor()) {
             try {
-                EmailSender.SendEmail(letterRepository.getById(body.get("letterID")), "NEEDS TO RETRIEVE EMAIL TO SEND TO");
+                Letter tempLtr=letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId());
+                emailSender.SendEmail(tempLtr);
+                letterRepository.delete(letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId()));
+                applicationRepository.delete(applicationRepository.getById(body.get("appID")));
 
             } catch (MessagingException e) {
                 e.printStackTrace();
@@ -199,22 +226,12 @@ public class MyController {
         }
     }
 
-    @GetMapping(value = "/applicationByID",
-                produces=MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Application getApplicationByID(@RequestParam String appID){
-        //TODO: change it here so if application is not found return an error
-       Optional<Application> application = applicationRepository.findById(appID);
-       //need to do this cause of optional class
-       return application.get();
-    }
 
     @PatchMapping
             (value = "/application",
             consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public void ApproveApplication(@RequestParam Map<String, String> body,HttpServletResponse response){
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(checkIfProfessor()) {
             String appID = body.get("appID");
             boolean accept = Boolean.parseBoolean(body.get("accepted"));
@@ -223,6 +240,7 @@ public class MyController {
                 tempApplication.setAccepted(true);
                 applicationRepository.save(tempApplication);
             } else {
+                letterRepository.delete(letterRepository.getById(tempApplication.getLetterId()));
                 applicationRepository.delete(tempApplication);
             }
         }

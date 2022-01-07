@@ -18,8 +18,9 @@
 <div  class="maindiv" style="background-color: #ff4646" th:if="${(param.succ != null)}">Hmm... We weren't able to find this professor.<br> Make sure that the email is correct,or ask them to sign up.</div>
 <div class="maindiv">
         <input class="textBox" type="email" placeholder="Enter the professors email" name="profEmail" id="profEmail" required>
+        <input class="textBox" type="email" placeholder="Enter the letter recipient email" name="profEmail" id="toEmail" required>
         <br>
-        <input class="bigTextBox" type="text" placeholder="Write something about this application..." name="appBody" id="appBody" required>
+        <textarea class="bigTextBox" placeholder="Write something about this application..." name="appBody" id="appBody" required></textarea>
         <br>
         <button  class="button" onclick="submit()">Submit</button>
 </div>

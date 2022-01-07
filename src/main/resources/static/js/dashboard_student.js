@@ -33,7 +33,7 @@ function makeList(data){
 
 function onApplicationClicked(id){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/application?appId="+id);
+    xhttp.open("GET", "/application?appID="+id);
     xhttp.send();
     xhttp.onload =function(){
         renderApplication(JSON.parse(xhttp.responseText));
@@ -47,6 +47,8 @@ function renderApplication(application){
     namePar.innerText="Name:\n"+application.studFName+" "+application.studLName+"("+application.fromMail+")"+"\n";
     var profToPar=document.createElement("p");
     profToPar.innerText="To professor:\n"+application.profEmail;
+    var recieverPar=document.createElement("p");
+    recieverPar.innerText="Letter Recipient:\n"+application.letterReceiverEmail;
     var acceptedPar=document.createElement("p");
     if(application.accepted===null){
         acceptedPar.innerText="Accepted:No";
@@ -58,6 +60,7 @@ function renderApplication(application){
     bodyPar.innerText="Application Body:\n"+application.body+"\n";
     detailsDiv.appendChild(namePar);
     detailsDiv.appendChild(profToPar);
+    detailsDiv.appendChild(recieverPar);
     detailsDiv.appendChild(acceptedPar);
     detailsDiv.appendChild(bodyPar);
 }

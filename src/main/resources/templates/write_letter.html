@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link th:href="@{/css/new_application.css}" rel="stylesheet" />
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>New Application</title>
     <script src="/js/write_letter.js"></script>
 </head>
-<body onload="getApplication()">
-<label for="letterBody">Letter Body:</label>
-<br>
-<textarea id="letterBody" name="letterBody" rows="4" cols="50">
-Write the main body here
-</textarea>
-<button id="sendLetterBtn" onclick="sendLetter()">Send Letter</button>
+<body onload="init()">
+<div class="topnav">
+    <a href="/dashboard">My Applications</a>
+    <a href="/profile">My Profile</a>
+    <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
+    <form class="logoutBtn" th:action="@{/logout}" method="post">
+        <input class="button" type="submit" value="Sign Out"/>
+    </form>
+</div>
+<div class="maindiv">
+    <br>
+    <textarea class="bigTextBox" placeholder="Write your letter here!" name="letterBody" id="letterBody" required></textarea>
+    <br>
+    <button  class="button" onclick="saveLetter()">Save Letter and return</button>
+    <button  class="button" onclick="sendLetter()">Send Letter as is (Warning:Irreversible)</button>
+</div>
 </body>
 </html>

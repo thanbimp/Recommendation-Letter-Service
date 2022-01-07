@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
     <script src="/js/dashboard_professor.js"></script>
@@ -16,6 +16,8 @@
         <input class="button" type="submit" value="Sign Out"/>
     </form>
 </div>
+<div  class="maindiv" style="text-align: center" th:if="${(param.letterSent != null)}">The letter has been sent as an e-mail.</div>
+<div  class="maindiv" style="text-align: center" th:if="${(param.letterSave != null)}">The letter was saved.<br>You may return to it at any time by going to the respective application and clicking "Write Letter"</div>
 <div class="maindiv">
     <div id="listDiv"></div>
     <div id="detailsDiv"></div>

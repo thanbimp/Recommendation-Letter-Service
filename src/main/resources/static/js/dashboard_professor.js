@@ -35,7 +35,7 @@ function makeList(data){
 
 function onApplicationClicked(id){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/application?appId="+id);
+    xhttp.open("GET", "/application?appID="+id);
     xhttp.send();
     xhttp.onload =function(){
         currentSelectedApplicationID = id;
