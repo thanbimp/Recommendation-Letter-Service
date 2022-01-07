@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -54,10 +55,10 @@ public class MyController {
     @GetMapping("/dashboard")
     public String dashboard(){
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (authUser.getAccType() == 0){
-            return "dashboard";
-        }else{
+        if (checkIfProfessor()){
             return "professor_dashboard";
+        }else{
+            return "dashboard";
         }
 
     }
@@ -94,14 +95,13 @@ public class MyController {
     )
     @ResponseBody
     private Application getApplication(@RequestParam Map<String, String> body){
-        Application application=applicationRepository.findApplicationByAppId(body.get("appId")).get();
-        return application;
+        return applicationRepository.findApplicationByAppId(body.get("appId")).get();
     }
 
     @PostMapping(value="/application")
     @ResponseBody
     public String addNewApplication(@RequestParam Map<String, String> body){
-        if(!userRepository.findUserByEmail(body.get("profEmail")).isEmpty()){
+        if(userRepository.findUserByEmail(body.get("profEmail")).isPresent()){
             if(userRepository.findUserByEmail(body.get("profEmail")).get().getAccType()==0){
                 return "false";
             }
@@ -131,9 +131,14 @@ public class MyController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseBody
-    public void addNewLetter(@RequestParam Map<String, String> body) {
-       Letter letter = new Letter(body.get("fName"),body.get("lName"),body.get("body"),applicationRepository.getById(body.get("appID")));
-       letterRepository.save(letter);
+    public void addNewLetter(@RequestParam Map<String, String> body,HttpServletResponse response) {
+        if(checkIfProfessor()) {
+            Letter letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")));
+            letterRepository.save(letter);
+        }
+        else {
+            response.setStatus(403);
+        }
     }
 
     @PatchMapping(
@@ -141,18 +146,29 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     @ResponseBody
-    public void sendLetter(@RequestParam Map<String, String> body){
-        try {
-            EmailSender.SendEmail(letterRepository.getById(body.get("letterID")),"NEEDS TO RETRIEVE EMAIL TO SEND TO");
+    public void sendLetter(@RequestParam Map<String, String> body,HttpServletResponse response){
+        if(checkIfProfessor()) {
+            try {
+                EmailSender.SendEmail(letterRepository.getById(body.get("letterID")), "NEEDS TO RETRIEVE EMAIL TO SEND TO");
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            response.setStatus(403);
         }
     }
 
     @GetMapping(value = "/write_letter")
-    public String showWriteLetter(@RequestParam String appID){
-        return "write_letter";
+    public String showWriteLetter(@RequestParam String appID,HttpServletResponse response){
+        if(checkIfProfessor()) {
+            return "write_letter";
+        }
+        else{
+            response.setStatus(403);
+        }
+        return null;
     }
 
     @GetMapping(
@@ -160,25 +176,27 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public List<Application> getApplicationsByEmail(@RequestParam Map<String, String> body){
+    public List<Application> getApplicationsForStudent(){
         List<Application> AllApplications = applicationRepository.findAll();
-        List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getFromMail().equals(body.get("email"))).collect(Collectors.toList());
-        return FilteredApplications;
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return AllApplications.stream().filter(o -> o.getFromMail().equals(authUser.getEmail())).collect(Collectors.toList());
     }
 
-    //TODO: Rename this or the above mapping?
-    //also maybe security leak? because anyone can send GET request and get applications?
     @GetMapping(
             value = "/myApplicationsProf",
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public List<Application> getApplicationsForProf(@RequestParam Map<String, String> body){
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Application> AllApplications = applicationRepository.findAll();
-        //only return applications to the professor
-        List<Application> FilteredApplications = AllApplications.stream().filter(o -> o.getProfEmail().equals(authUser.getEmail())).collect(Collectors.toList());
-        return FilteredApplications;
+    public List<Application> getApplicationsForProf(HttpServletResponse response){
+        if(checkIfProfessor()) {
+            User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            List<Application> AllApplications = applicationRepository.findAll();
+            //only return applications to the professor
+            return AllApplications.stream().filter(o -> o.getProfEmail().equals(authUser.getEmail())).collect(Collectors.toList());
+        }else{
+            response.setStatus(403);
+            return null;
+        }
     }
 
     @GetMapping(value = "/applicationByID",
@@ -194,16 +212,23 @@ public class MyController {
             (value = "/application",
             consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public void ApproveApplication(@RequestParam Map<String, String> body){
-        String appID= body.get("appID");
-        Boolean accept= Boolean.parseBoolean(body.get("accepted"));
-        Application tempApplication= applicationRepository.getById(appID);
-        if (accept){
-            tempApplication.setAccepted(true);
-            applicationRepository.save(tempApplication);
+    public void ApproveApplication(@RequestParam Map<String, String> body,HttpServletResponse response){
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(checkIfProfessor()) {
+            String appID = body.get("appID");
+            boolean accept = Boolean.parseBoolean(body.get("accepted"));
+            Application tempApplication = applicationRepository.getById(appID);
+            if (accept) {
+                tempApplication.setAccepted(true);
+                applicationRepository.save(tempApplication);
+            } else {
+                applicationRepository.delete(tempApplication);
+            }
         }
-        else applicationRepository.delete(tempApplication);
-    }
+        else {
+            response.setStatus(403);
+        }
+        }
 
 
 
@@ -218,5 +243,10 @@ public class MyController {
             error = "Invalid username and password!";
         }
         return error;
+    }
+
+    private Boolean checkIfProfessor(){
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return authUser.getAccType() == 1;
     }
 }

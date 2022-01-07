@@ -1,11 +1,11 @@
 function init(){
-    getApplications(document.getElementById("userEmail").textContent);
+    getApplications();
 }
 
 
-function getApplications(email){
+function getApplications(){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/myApplications?email="+email);
+    xhttp.open("GET", "/myApplications");
     xhttp.send();
     xhttp.onload =function(){
         makeApplicationsArray(xhttp.responseText);
