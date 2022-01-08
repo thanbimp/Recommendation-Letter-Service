@@ -1,6 +1,6 @@
 function submit(){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/user");
+    xhttp.open("GET", "/currUser");
     xhttp.send();
     xhttp.onload =function(){
         parseDataAndSubmit(JSON.parse(xhttp.responseText),document.getElementById("profEmail").value,document.getElementById("appBody").value,document.getElementById("toEmail").value);

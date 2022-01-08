@@ -136,7 +136,7 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private List<User> getAllUsers(){
+    private List<User> ΛgetAllUsers(){
         return userRepository.findAll();
     }
 
