@@ -56,14 +56,34 @@ public class MyController {
     @GetMapping("/dashboard")
     public String dashboard(){
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (checkIfProfessor()){
+        if (authUser.getAccType() == 1){
             return "professor_dashboard";
-        }else{
+        }else if(authUser.getAccType() == 0){
             return "dashboard";
+        }else{
+            return "redirect:/admin";
         }
 
     }
 
+
+    @GetMapping("/admin")
+    private String adminPage(){
+        return "admin_page";
+    }
+
+
+    @PatchMapping("/admin/delete")
+    @ResponseBody
+    private String deleteUser(@RequestParam String userEmail){
+        if (userRepository.findUserByEmail(userEmail).isPresent()){
+            userRepository.delete(userRepository.findUserByEmail(userEmail).get());
+            return "true";
+        }else{
+            return "false";
+        }
+
+    }
 
     @GetMapping("/register")
     public String register() {
@@ -87,8 +107,8 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private User getUser(@RequestParam Map<String, String> body){
-        return userRepository.findUserByEmail(body.get("email")).get();
+    private User getUser(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
     @GetMapping(
             value = "/application",
@@ -97,6 +117,19 @@ public class MyController {
     @ResponseBody
     private Application getApplication(@RequestParam Map<String, String> body){
         return applicationRepository.findApplicationByAppId(body.get("appID")).get();
+    }
+
+    @PatchMapping(value = "/user",
+                consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    )
+    @ResponseBody
+    private void updateUser(@RequestParam Map<String, String> body){
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        currentUser.setFName(body.get("fname"));
+        currentUser.setLName(body.get("lname"));
+        currentUser.setPassword(passwordEncoder.encode(body.get("password")));
+        currentUser.setPhoneNo(body.get("phoneNo"));
+        userRepository.save(currentUser);
     }
 
     @PostMapping(value="/application")
@@ -247,8 +280,13 @@ public class MyController {
         else {
             response.setStatus(403);
         }
-        }
+    }
 
+
+    @GetMapping(value = "/profile")
+    public String profilePage(){
+        return "profile";
+    }
 
 
     private String getErrorMessage(HttpServletRequest request, String key) {
