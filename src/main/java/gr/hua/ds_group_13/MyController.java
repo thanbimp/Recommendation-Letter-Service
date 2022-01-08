@@ -68,21 +68,32 @@ public class MyController {
 
 
     @GetMapping("/admin")
-    private String adminPage(){
-        return "admin_page";
+    private String adminPage(HttpServletResponse response){
+        if(checkIfAdmin()) {
+            return "admin_page";
+        }
+        else {
+            response.setStatus(403);
+        }
+        return "null";
     }
 
 
     @PatchMapping("/admin/delete")
     @ResponseBody
-    private String deleteUser(@RequestParam String userEmail){
-        if (userRepository.findUserByEmail(userEmail).isPresent()){
-            userRepository.delete(userRepository.findUserByEmail(userEmail).get());
-            return "true";
-        }else{
-            return "false";
+    private String deleteUser(@RequestParam Map<String, String> body,HttpServletResponse response){
+        if(checkIfAdmin()) {
+            if (userRepository.findUserByEmail(body.get("userEmail")).isPresent()) {
+                userRepository.delete(userRepository.getById(body.get("userEmail")));
+                return "true";
+            } else {
+                return "false";
+            }
         }
-
+        else {
+            response.setStatus(403);
+        }
+        return null;
     }
 
     @GetMapping("/register")
@@ -103,13 +114,32 @@ public class MyController {
 
 
     @GetMapping(
+            value = "/currUser",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    private User getCurrUser(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @GetMapping(
             value = "/user",
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private User getUser(){
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private User getUser(@RequestParam Map<String, String> body){
+        return userRepository.findById(body.get("email")).get();
     }
+
+    @GetMapping(
+            value = "/allUsers",
+            produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    private List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
     @GetMapping(
             value = "/application",
             produces=MediaType.APPLICATION_JSON_VALUE
@@ -127,7 +157,9 @@ public class MyController {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         currentUser.setFName(body.get("fname"));
         currentUser.setLName(body.get("lname"));
-        currentUser.setPassword(passwordEncoder.encode(body.get("password")));
+        if(!body.get("password").isBlank()) {
+            currentUser.setPassword(passwordEncoder.encode(body.get("password")));
+        }
         currentUser.setPhoneNo(body.get("phoneNo"));
         userRepository.save(currentUser);
     }
@@ -305,5 +337,10 @@ public class MyController {
     private Boolean checkIfProfessor(){
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return authUser.getAccType() == 1;
+    }
+
+    private Boolean checkIfAdmin(){
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return authUser.getAccType() == 2;
     }
 }

@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>ADMIN</title>
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
+    <script src="/js/admin_home.js"></script>
+    <title>
+        My Applications
+    </title>
 </head>
-<body>
-THIS IS THE ADMIN PAGE
+<body onload= "init()">
+<div class="topnav">
+    <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
+    <form class="logoutBtn" th:action="@{/logout}" method="post">
+        <input class="button" type="submit" value="Sign Out"/>
+    </form>
+</div>
+<div  class="maindiv" style="text-align: center" th:if="${(param.letterSave != null)}">The letter was saved.<br>You may return to it at any time by going to the respective application and clicking "Write Letter"</div>
+<div class="maindiv">
+    <div id="listDiv"></div>
+    <div id="detailsDiv"></div>
+</div>
 </body>
 </html>

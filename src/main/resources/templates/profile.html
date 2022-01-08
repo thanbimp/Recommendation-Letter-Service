@@ -1,11 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <script src="js/profile.js"></script>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link th:href="@{/css/new_application.css}" rel="stylesheet" />
+    <script src="/js/profile.js"></script>
+    <title>
+        My Applications
+    </title>
 </head>
-<body onload="innit()">
-
+<body onload= "init()">
+<div class="topnav">
+    <a href="/dashboard">My Applications</a>
+    <a href="/profile">My Profile</a>
+    <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
+    <form class="logoutBtn" th:action="@{/logout}" method="post">
+        <input class="button" type="submit" value="Sign Out"/>
+    </form>
+</div>
+<div  class="maindiv" style="text-align: center" th:if="${(param.succ != null)}">Details saved successfully!</div>
+<div class="maindiv">
+    <label for="fName">First Name</label>
+    <input class="textBox"  type="text" name="fName" id="fName" required>
+    <br>
+    <label for="lName">Last Name</label>
+    <input class="textBox" type="text" name="lName" id="lName" required>
+    <br>
+    <label for="phoneNo">Phone Number</label>
+    <input class="textBox" type="text" name="phoneNo" id="phoneNo" required>
+    <br>
+    <label for="newPass">Enter a new password,if you want to change it.</label>
+    <input class="textBox" type="password" name="newPass" id="newPass" required>
+    <br>
+    <button class="button" onclick="save()">Save</button>
+</div>
 </body>
 </html>
