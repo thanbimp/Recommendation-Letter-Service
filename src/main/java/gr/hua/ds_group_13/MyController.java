@@ -2,7 +2,6 @@ package gr.hua.ds_group_13;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -136,7 +135,7 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private List<User> ΛgetAllUsers(){
+    private List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
