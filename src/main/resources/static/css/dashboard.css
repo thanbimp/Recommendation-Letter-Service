@@ -33,6 +33,7 @@ body{
 li:hover{
     background-color: #a7d2b8;
     color: black;
+    cursor: pointer;
 }
 
 li:active{

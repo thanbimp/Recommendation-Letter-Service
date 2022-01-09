@@ -26,7 +26,7 @@ function makeList(data){
     for (var i = 0; i < data.length; ++i) {
         var li = document.createElement('li');
         li.setAttribute("id",data[i].appId);
-        li.setAttribute("onclick","onApplicationClicked(this.id)")
+        li.setAttribute("onclick","onApplicationClicked(this.id)");
         var textnode = document.createTextNode(data[i].timeStamp);
         li.appendChild(textnode);
         ul.appendChild(li);
