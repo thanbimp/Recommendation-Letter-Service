@@ -44,7 +44,7 @@ public class MyController {
 
 
     @GetMapping("/login")
-    public String login(HttpServletRequest request, HttpSession session) {
+    private String login(HttpServletRequest request, HttpSession session) {
         session.setAttribute(
                 "error", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION")
         );
@@ -104,7 +104,7 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
     )
-    public String addUser(@RequestParam Map<String, String> body,HttpSession session) {
+    private String addUser(@RequestParam Map<String, String> body,HttpSession session) {
         User user = new User(body.get("email"),passwordEncoder.encode(body.get("password")),body.get("fname"),body.get("lname"),(short) Integer.parseInt(body.get("accType")),body.get("phoneNo"));
         userDetailsManager.createUser(user);
         session.setAttribute("registered",true);
@@ -165,7 +165,7 @@ public class MyController {
 
     @PostMapping(value="/application")
     @ResponseBody
-    public String addNewApplication(@RequestParam Map<String, String> body){
+    private String addNewApplication(@RequestParam Map<String, String> body){
         if(userRepository.findUserByEmail(body.get("profEmail")).isPresent()){
             if(userRepository.findUserByEmail(body.get("profEmail")).get().getAccType()==0){
                 return "false";
@@ -185,7 +185,7 @@ public class MyController {
     @GetMapping(
             value = "/new_application"
     )
-    public String newApplication(){
+    private String newApplication(){
         return "/new_application";
     }
 
@@ -195,7 +195,7 @@ public class MyController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public String getLetter(@RequestParam Map<String, String> body){
+    private String getLetter(@RequestParam Map<String, String> body){
         if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()) {
             return letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get().getBody();
         }
@@ -209,7 +209,7 @@ public class MyController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseBody
-    public void addNewLetter(@RequestParam Map<String, String> body,HttpServletResponse response) {
+    private void addNewLetter(@RequestParam Map<String, String> body,HttpServletResponse response) {
         if(checkIfProfessor()) {
             Letter letter=null;
             if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()){
@@ -234,7 +234,7 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     @ResponseBody
-    public void sendLetter(@RequestParam Map<String, String> body,HttpServletResponse response){
+    private void sendLetter(@RequestParam Map<String, String> body,HttpServletResponse response){
         if(checkIfProfessor()) {
             try {
                 Letter tempLtr=letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId());
@@ -252,7 +252,7 @@ public class MyController {
     }
 
     @GetMapping(value = "/write_letter")
-    public String showWriteLetter(@RequestParam String appID,HttpServletResponse response){
+    private String showWriteLetter(@RequestParam String appID,HttpServletResponse response){
         if(checkIfProfessor()) {
             return "write_letter";
         }
@@ -267,7 +267,7 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public List<Application> getApplicationsForStudent(){
+    private List<Application> getApplicationsForStudent(){
         List<Application> AllApplications = applicationRepository.findAll();
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return AllApplications.stream().filter(o -> o.getFromMail().equals(authUser.getEmail())).collect(Collectors.toList());
@@ -278,7 +278,7 @@ public class MyController {
             produces=MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public List<Application> getApplicationsForProf(HttpServletResponse response){
+    private List<Application> getApplicationsForProf(HttpServletResponse response){
         if(checkIfProfessor()) {
             User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             List<Application> AllApplications = applicationRepository.findAll();
@@ -295,7 +295,7 @@ public class MyController {
             (value = "/application",
             consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public void ApproveApplication(@RequestParam Map<String, String> body,HttpServletResponse response){
+    private void ApproveApplication(@RequestParam Map<String, String> body,HttpServletResponse response){
         if(checkIfProfessor()) {
             String appID = body.get("appID");
             boolean accept = Boolean.parseBoolean(body.get("accepted"));
@@ -315,7 +315,7 @@ public class MyController {
 
 
     @GetMapping(value = "/profile")
-    public String profilePage(){
+    private String profilePage(){
         return "profile";
     }
 
