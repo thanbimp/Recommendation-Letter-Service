@@ -1,12 +1,5 @@
 package gr.hua.ds_group_13;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class MyController {
@@ -53,13 +54,13 @@ public class MyController {
 
 
     @GetMapping("/dashboard")
-    public String dashboard(){
+    public String dashboard() {
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (authUser.getAccType() == 1){
+        if (authUser.getAccType() == 1) {
             return "professor_dashboard";
-        }else if(authUser.getAccType() == 0){
+        } else if (authUser.getAccType() == 0) {
             return "dashboard";
-        }else{
+        } else {
             return "redirect:/admin";
         }
 
@@ -67,11 +68,10 @@ public class MyController {
 
 
     @GetMapping("/admin")
-    private String adminPage(HttpServletResponse response){
-        if(checkIfAdmin()) {
+    private String adminPage(HttpServletResponse response) {
+        if (checkIfAdmin()) {
             return "admin_page";
-        }
-        else {
+        } else {
             response.setStatus(403);
         }
         return "null";
@@ -80,16 +80,15 @@ public class MyController {
 
     @PatchMapping("/admin/delete")
     @ResponseBody
-    private String deleteUser(@RequestParam Map<String, String> body,HttpServletResponse response){
-        if(checkIfAdmin()) {
+    private String deleteUser(@RequestParam Map<String, String> body, HttpServletResponse response) {
+        if (checkIfAdmin()) {
             if (userRepository.findUserByEmail(body.get("userEmail")).isPresent()) {
                 userRepository.delete(userRepository.getById(body.get("userEmail")));
                 return "true";
             } else {
                 return "false";
             }
-        }
-        else {
+        } else {
             response.setStatus(403);
         }
         return null;
@@ -99,84 +98,83 @@ public class MyController {
     public String register() {
         return "register";
     }
+
     @PostMapping(
             value = "/register",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
-            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    private String addUser(@RequestParam Map<String, String> body,HttpSession session) {
-        User user = new User(body.get("email"),passwordEncoder.encode(body.get("password")),body.get("fname"),body.get("lname"),(short) Integer.parseInt(body.get("accType")),body.get("phoneNo"));
+    private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
+        User user = new User(body.get("email"), passwordEncoder.encode(body.get("password")), body.get("fname"), body.get("lname"), (short) Integer.parseInt(body.get("accType")), body.get("phoneNo"));
         userDetailsManager.createUser(user);
-        session.setAttribute("registered",true);
+        session.setAttribute("registered", true);
         return "redirect:/login";
     }
 
 
     @GetMapping(
             value = "/currUser",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private User getCurrUser(){
+    private User getCurrUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @GetMapping(
             value = "/user",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private User getUser(@RequestParam Map<String, String> body){
+    private User getUser(@RequestParam Map<String, String> body) {
         return userRepository.findById(body.get("email")).get();
     }
 
     @GetMapping(
             value = "/allUsers",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private List<User> getAllUsers(){
+    private List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping(
             value = "/application",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private Application getApplication(@RequestParam Map<String, String> body){
+    private Application getApplication(@RequestParam Map<String, String> body) {
         return applicationRepository.findApplicationByAppId(body.get("appID")).get();
     }
 
     @PatchMapping(value = "/user",
-                consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     @ResponseBody
-    private void updateUser(@RequestParam Map<String, String> body){
+    private void updateUser(@RequestParam Map<String, String> body) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         currentUser.setFName(body.get("fname"));
         currentUser.setLName(body.get("lname"));
-        if(!body.get("password").isBlank()) {
+        if (!body.get("password").isBlank()) {
             currentUser.setPassword(passwordEncoder.encode(body.get("password")));
         }
         currentUser.setPhoneNo(body.get("phoneNo"));
         userRepository.save(currentUser);
     }
 
-    @PostMapping(value="/application")
+    @PostMapping(value = "/application")
     @ResponseBody
-    private String addNewApplication(@RequestParam Map<String, String> body){
-        if(userRepository.findUserByEmail(body.get("profEmail")).isPresent()){
-            if(userRepository.findUserByEmail(body.get("profEmail")).get().getAccType()==0){
+    private String addNewApplication(@RequestParam Map<String, String> body) {
+        if (userRepository.findUserByEmail(body.get("profEmail")).isPresent()) {
+            if (userRepository.findUserByEmail(body.get("profEmail")).get().getAccType() == 0) {
                 return "false";
-            }
-            else {
-                Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"),body.get("toMail"));
+            } else {
+                Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"), body.get("toMail"));
                 applicationRepository.save(application);
                 return "true";
             }
-        }
-        else{
+        } else {
             return "false";
         }
     }
@@ -185,18 +183,18 @@ public class MyController {
     @GetMapping(
             value = "/new_application"
     )
-    private String newApplication(){
+    private String newApplication() {
         return "/new_application";
     }
 
 
     @GetMapping(
-            value="/letter",
+            value = "/letter",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private String getLetter(@RequestParam Map<String, String> body){
-        if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()) {
+    private String getLetter(@RequestParam Map<String, String> body) {
+        if (letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()) {
             return letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get().getBody();
         }
         return null;
@@ -204,40 +202,38 @@ public class MyController {
 
 
     @PostMapping(
-            value="/letter",
+            value = "/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseBody
-    private void addNewLetter(@RequestParam Map<String, String> body,HttpServletResponse response) {
-        if(checkIfProfessor()) {
-            Letter letter=null;
-            if(letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()){
-                letter=letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get();
+    private void addNewLetter(@RequestParam Map<String, String> body, HttpServletResponse response) {
+        if (checkIfProfessor()) {
+            Letter letter = null;
+            if (letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).isPresent()) {
+                letter = letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get();
                 letter.setBody(body.get("body"));
-            }
-            else{
-                letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")),body.get("receiverEmail"));
+            } else {
+                letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")), body.get("receiverEmail"));
             }
             letterRepository.save(letter);
-            Application relatedApplication=applicationRepository.getById(body.get("appID"));
+            Application relatedApplication = applicationRepository.getById(body.get("appID"));
             relatedApplication.setLetterId(letter.getId());
             applicationRepository.save(relatedApplication);
-        }
-        else {
+        } else {
             response.setStatus(403);
         }
     }
 
     @PatchMapping(
-            value="/letter",
+            value = "/letter",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     @ResponseBody
-    private void sendLetter(@RequestParam Map<String, String> body,HttpServletResponse response){
-        if(checkIfProfessor()) {
+    private void sendLetter(@RequestParam Map<String, String> body, HttpServletResponse response) {
+        if (checkIfProfessor()) {
             try {
-                Letter tempLtr=letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId());
+                Letter tempLtr = letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId());
                 emailSender.SendEmail(tempLtr);
                 letterRepository.delete(letterRepository.getById(applicationRepository.getById(body.get("appID")).getLetterId()));
                 applicationRepository.delete(applicationRepository.getById(body.get("appID")));
@@ -245,18 +241,16 @@ public class MyController {
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             response.setStatus(403);
         }
     }
 
     @GetMapping(value = "/write_letter")
-    private String showWriteLetter(@RequestParam String appID,HttpServletResponse response){
-        if(checkIfProfessor()) {
+    private String showWriteLetter(@RequestParam String appID, HttpServletResponse response) {
+        if (checkIfProfessor()) {
             return "write_letter";
-        }
-        else{
+        } else {
             response.setStatus(403);
         }
         return null;
@@ -264,10 +258,10 @@ public class MyController {
 
     @GetMapping(
             value = "/myApplications",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private List<Application> getApplicationsForStudent(){
+    private List<Application> getApplicationsForStudent() {
         List<Application> AllApplications = applicationRepository.findAll();
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return AllApplications.stream().filter(o -> o.getFromMail().equals(authUser.getEmail())).collect(Collectors.toList());
@@ -275,16 +269,16 @@ public class MyController {
 
     @GetMapping(
             value = "/myApplicationsProf",
-            produces=MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    private List<Application> getApplicationsForProf(HttpServletResponse response){
-        if(checkIfProfessor()) {
+    private List<Application> getApplicationsForProf(HttpServletResponse response) {
+        if (checkIfProfessor()) {
             User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             List<Application> AllApplications = applicationRepository.findAll();
             //only return applications to the professor
             return AllApplications.stream().filter(o -> o.getProfEmail().equals(authUser.getEmail())).collect(Collectors.toList());
-        }else{
+        } else {
             response.setStatus(403);
             return null;
         }
@@ -293,10 +287,10 @@ public class MyController {
 
     @PatchMapping
             (value = "/application",
-            consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                    consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    private void ApproveApplication(@RequestParam Map<String, String> body,HttpServletResponse response){
-        if(checkIfProfessor()) {
+    private void ApproveApplication(@RequestParam Map<String, String> body, HttpServletResponse response) {
+        if (checkIfProfessor()) {
             String appID = body.get("appID");
             boolean accept = Boolean.parseBoolean(body.get("accepted"));
             Application tempApplication = applicationRepository.getById(appID);
@@ -307,15 +301,14 @@ public class MyController {
                 letterRepository.delete(letterRepository.getById(tempApplication.getLetterId()));
                 applicationRepository.delete(tempApplication);
             }
-        }
-        else {
+        } else {
             response.setStatus(403);
         }
     }
 
 
     @GetMapping(value = "/profile")
-    private String profilePage(){
+    private String profilePage() {
         return "profile";
     }
 
@@ -333,12 +326,12 @@ public class MyController {
         return error;
     }
 
-    private Boolean checkIfProfessor(){
+    private Boolean checkIfProfessor() {
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return authUser.getAccType() == 1;
     }
 
-    private Boolean checkIfAdmin(){
+    private Boolean checkIfAdmin() {
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return authUser.getAccType() == 2;
     }

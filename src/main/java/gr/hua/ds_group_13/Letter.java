@@ -11,24 +11,24 @@ public class Letter {
     @Id
     private String letter_id;
     @OneToOne
-    @JoinColumn (name="app_id")
+    @JoinColumn(name = "app_id")
     private Application AppID;
     private String profFName;
     private String profLName;
     private String body;
     private String receiverEmail;
 
-    public Letter(){
+    public Letter() {
 
     }
 
-    public Letter(String profFName, String profLName, String body,Application AppId,String receiverEmail) {
-        this.AppID=AppId;
+    public Letter(String profFName, String profLName, String body, Application AppId, String receiverEmail) {
+        this.AppID = AppId;
         this.letter_id = UUID.randomUUID().toString();
         this.profFName = profFName;
         this.profLName = profLName;
         this.body = body;
-        this.receiverEmail=receiverEmail;
+        this.receiverEmail = receiverEmail;
     }
 
     public String getId() {

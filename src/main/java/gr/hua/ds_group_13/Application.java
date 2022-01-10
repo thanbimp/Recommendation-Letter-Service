@@ -1,6 +1,8 @@
 package gr.hua.ds_group_13;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -20,23 +22,22 @@ public class Application {
     private String letterReceiverEmail;
     private String letterId;
 
-    public Application(){
+    public Application() {
 
     }
 
 
-
-    public Application(String profEmail, String body, String studFName, String studLName,String fromMail,String letterReceiverEmail) {
+    public Application(String profEmail, String body, String studFName, String studLName, String fromMail, String letterReceiverEmail) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        this.timeStamp=dtf.format(now);
-        this.fromMail=fromMail;
+        this.timeStamp = dtf.format(now);
+        this.fromMail = fromMail;
         this.appId = UUID.randomUUID().toString();
         this.profEmail = profEmail;
         Body = body;
         StudFName = studFName;
         StudLName = studLName;
-        this.letterReceiverEmail =letterReceiverEmail;
+        this.letterReceiverEmail = letterReceiverEmail;
     }
 
 
@@ -44,7 +45,7 @@ public class Application {
         return letterId;
     }
 
-    public void setLetterId(String  letterId) {
+    public void setLetterId(String letterId) {
         this.letterId = letterId;
     }
 

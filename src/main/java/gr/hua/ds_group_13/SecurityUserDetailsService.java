@@ -13,7 +13,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
 
-
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
@@ -22,7 +21,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         return user;
     }
 
-    public  void createUser(UserDetails user) {
+    public void createUser(UserDetails user) {
         userRepository.save((User) user);
     }
 }
