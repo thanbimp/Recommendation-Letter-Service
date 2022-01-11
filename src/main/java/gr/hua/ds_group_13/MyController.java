@@ -298,6 +298,9 @@ public class MyController {
                 tempApplication.setAccepted(true);
                 applicationRepository.save(tempApplication);
             } else {
+                if(letterRepository.findLetterByAppID(tempApplication).isPresent()){
+                    letterRepository.delete(letterRepository.findLetterByAppID(tempApplication).get());
+                }
 
                 applicationRepository.delete(tempApplication);
                 if (letterRepository.findLetterByAppID(tempApplication).isPresent()){
