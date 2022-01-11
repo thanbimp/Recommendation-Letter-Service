@@ -184,7 +184,7 @@ public class MyController {
             value = "/new_application"
     )
     private String newApplication() {
-        return "/new_application";
+        return "new_application";
     }
 
 
