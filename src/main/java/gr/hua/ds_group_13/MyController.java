@@ -214,7 +214,8 @@ public class MyController {
                 letter = letterRepository.findLetterByAppID(applicationRepository.getById(body.get("appID"))).get();
                 letter.setBody(body.get("body"));
             } else {
-                letter = new Letter(body.get("fName"), body.get("lName"), body.get("body"), applicationRepository.getById(body.get("appID")), body.get("receiverEmail"));
+                Application tempApp = applicationRepository.getById(body.get("appID"));
+                letter = new Letter(userRepository.findUserByEmail(tempApp.getProfEmail()).get().getFName(), userRepository.findUserByEmail(tempApp.getProfEmail()).get().getLName(), body.get("body"),tempApp, body.get("receiverEmail"));
             }
             letterRepository.save(letter);
             Application relatedApplication = applicationRepository.getById(body.get("appID"));
