@@ -105,6 +105,10 @@ public class MyController {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
+        if(userRepository.findUserByEmail(body.get("email")).isPresent()){
+            session.setAttribute("error", true);
+            return "redirect:/register";
+        }
         User user = new User(body.get("email"), passwordEncoder.encode(body.get("password")), body.get("fname"), body.get("lname"), (short) Integer.parseInt(body.get("accType")), body.get("phoneNo"));
         userDetailsManager.createUser(user);
         session.setAttribute("registered", true);

@@ -19,6 +19,11 @@ div{
     padding: 10px;
 }
 
+.errorDiv{
+    background-color: #ff4646;
+    padding: 20px;
+}
+
 button{
     background-color: #a7d2b8;
     font-size: 12px;

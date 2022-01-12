@@ -6,6 +6,9 @@
   <title>Insert title here</title>
 </head>
 <body>
+<div class="errorDiv" th:if="${session.error}">
+  <p class="text">This user already exists! If you forgot your password,contact us.</p>
+</div>
 <form action="/register" method="post">
   <div class="container">
     <p class="titleText">Register</p>

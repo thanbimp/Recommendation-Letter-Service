@@ -47,13 +47,39 @@ function renderUser(user){
     detailsDiv.innerHTML="";
     var namePar=document.createElement("p");
     namePar.innerText="Name:\n"+user.fname+" "+user.lname+"\n"+"Email Address: "+user.email;
-    var delBtn=document.createElement("button");
-    delBtn.setAttribute("class","button");
-    delBtn.setAttribute("onclick","deleteUser()");
-    delBtn.setAttribute("style","background-color:#ff4646");
-    delBtn.innerText="Delete User";
-    detailsDiv.appendChild(namePar);
-    detailsDiv.appendChild(delBtn);
+    var accTypePar=document.createElement("p");
+    switch (user.accType){
+        case 0:
+            accTypePar.innerText="Account Type: Student"
+            var delBtn=document.createElement("button");
+            delBtn.setAttribute("class","button");
+            delBtn.setAttribute("onclick","deleteUser()");
+            delBtn.setAttribute("style","background-color:#ff4646");
+            delBtn.innerText="Delete User";
+            detailsDiv.appendChild(namePar);
+            detailsDiv.appendChild(accTypePar);
+            detailsDiv.appendChild(delBtn);
+            break;
+
+        case 1:
+            accTypePar.innerText="Account Type: Professor"
+            var delBtn=document.createElement("button");
+            delBtn.setAttribute("class","button");
+            delBtn.setAttribute("onclick","deleteUser()");
+            delBtn.setAttribute("style","background-color:#ff4646");
+            delBtn.innerText="Delete User";
+            detailsDiv.appendChild(namePar);
+            detailsDiv.appendChild(accTypePar);
+            detailsDiv.appendChild(delBtn);
+            break;
+
+        case 2:
+            accTypePar.innerText="Account Type: Administrator"
+            detailsDiv.appendChild(namePar);
+            detailsDiv.appendChild(accTypePar);
+            break;
+    }
+
 }
 
 function deleteUser(){
