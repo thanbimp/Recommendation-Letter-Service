@@ -1,12 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
-    text-align: center;
-    background-color: #e5e5f7;
-    opacity: 1;
-    background-image:  linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(30deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(150deg, #a7d2b8 12%, transparent 12.5%, transparent 87%, #a7d2b8 87.5%, #a7d2b8), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877), linear-gradient(60deg, #a7d2b877 25%, transparent 25.5%, transparent 75%, #a7d2b877 75%, #a7d2b877);
-    background-size: 46px 81px;
-    background-position: 0 0, 0 0, 23px 40px, 23px 40px, 0 0, 23px 40px;
+    background: #43C6AC;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #191654, #43C6AC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .emailtext{
@@ -37,7 +35,7 @@ body{
     margin: auto;
     margin-top: 10vw;
     border-radius: 25px;
-    background-color: #fafffb;
+    background-color: #ffffff;
     font-family: 'Ubuntu', sans-serif;
     padding: 10px;
 }
