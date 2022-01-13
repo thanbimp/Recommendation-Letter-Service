@@ -19,19 +19,19 @@ div{
 }
 
 .errorDiv{
-    background-color: #ff4646;
+    background-color: #ff0000;
     padding: 20px;
 }
 
 button{
-    background-color: #a7d2b8;
+    background-color: #42bfa9;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
 }
 button:hover {
-    background-color: #9ef1c0; /* Green */
+    background-color: #70c0b0; /* Green */
     color: #000000;
 }
 
@@ -44,10 +44,7 @@ button:hover {
     font-family: 'Pacifico', cursive;
 }
 
-.errorDiv{
-    background-color: #ff4646;
-    padding: 20px;
-}
+
 
 .textBox{
     width: 50%;

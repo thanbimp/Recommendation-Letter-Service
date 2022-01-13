@@ -16,8 +16,8 @@
         <input class="button" type="submit" value="Sign Out"/>
     </form>
 </div>
-<div  class="maindiv" style="text-align: center" th:if="${(param.letterSent != null)}">The letter has been sent as an e-mail.</div>
-<div  class="maindiv" style="text-align: center" th:if="${(param.letterSave != null)}">The letter was saved.<br>You may return to it at any time by going to the respective application and clicking "Write Letter"</div>
+<div  class="msgDiv" style="text-align: center" th:if="${(param.letterSent != null)}">The letter has been sent as an e-mail.</div>
+<div  class="msgDiv" style="text-align: center" th:if="${(param.letterSave != null)}">The letter was saved.<br>You may return to it at any time by going to the respective application and clicking "Write Letter"</div>
 <div class="maindiv">
     <div id="listDiv"></div>
     <div id="detailsDiv"></div>

@@ -88,7 +88,7 @@ function acceptApplication(result){
     xhr.send("accepted="+result+"&appID="+currentSelectedApplicationID);
     document.getElementById("listDiv").innerHTML="";
     document.getElementById("detailsDiv").innerHTML=""
-    setTimeout(function (){init()},50);
+    setTimeout(function (){init()},100);
 }
 
 function redirectToLetterPage(){

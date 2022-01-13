@@ -10,14 +10,24 @@ body{
 .emailtext{
     display: inline;
     font-family: 'Ubuntu', sans-serif;
+    padding-right: 20px;
+}
+
+.msgDiv{
     text-align: center;
-    padding: 14px 16px;
+    width: 60%;
+    margin: auto;
+    margin-top: 10vw;
+    border-radius: 25px;
+    background-color: #ffffff;
+    font-family: 'Ubuntu', sans-serif;
+    padding: 10px;
 }
 
 .logoutBtn{
-    display: inline;
-    text-align: center;
-    padding: 14px 16px;
+    display: inline-block;
+    padding-top: 7px;
+    padding-right: 20px;
 }
 .topnav {
     background-color: #fafffb;
@@ -29,15 +39,16 @@ body{
 }
 
 li:hover{
-    background-color: #a7d2b8;
+    background-color: #42bfa9;
     color: black;
     cursor: pointer;
 }
 
 li:active{
-    background-color: #a7d2b8;
+    background-color: #42bfa9;
     color: black;
 }
+
 .topnav a {
     float: left;
     font-family: 'Ubuntu', sans-serif;
@@ -50,13 +61,13 @@ li:active{
 
 /* Change the color of links on hover */
 .topnav a:hover {
-    background-color: #a7d2b8;
+    background-color: #42bfa9;
     color: black;
 }
 
 /* Add a color to the active/current link */
 .topnav a.active {
-    background-color: #04AA6D;
+    background-color: #42bfa9;
     color: white;
 }
 
@@ -91,14 +102,14 @@ li:active{
 }
 
 .button{
-    background-color: #a7d2b8;
+    background-color: #42bfa9;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
 }
 .button:hover {
-    background-color: #9ef1c0; /* Green */
+    background-color: #76bbaa; /* Green */
     color: #000000;
 }
 
@@ -112,20 +123,19 @@ li:active{
     margin-top: 15px;
     margin-left: 50vw;
     position: fixed;
-    background-color: #fafffb;
+    background-color: #ffffff;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
-    box-shadow: #04AA6D;
 }
 
 #newAppBtn:hover{
-    background-color: #9ef1c0; /* Green */
+    background-color: #5dc5b0; /* Green */
     color: #000000;
 }
 
 #newAppBtn:active{
-    background-color: #9ef1c0; /* Green */
+    background-color: #42bfa9; /* Green */
     color: #000000;
 }

@@ -95,7 +95,7 @@ public class MyController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(HttpSession session) {
         return "register";
     }
 
@@ -106,7 +106,7 @@ public class MyController {
     )
     private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
         if(userRepository.findUserByEmail(body.get("email")).isPresent()){
-            session.setAttribute("error", true);
+            session.setAttribute("registerError", true);
             return "redirect:/register";
         }
         User user = new User(body.get("email"), passwordEncoder.encode(body.get("password")), body.get("fname"), body.get("lname"), (short) Integer.parseInt(body.get("accType")), body.get("phoneNo"));
