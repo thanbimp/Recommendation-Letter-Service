@@ -6,7 +6,7 @@
 Η εφαρμογή έχει υλοποιηθεί με Spring Boot και με vanilla JS/HTML.
 
 
--  Ομάδα 13 
+- Ομάδα 13 
 - Θέμα 3ο-Συστατικές Επιστολές
 
 ## Προαπαιτούμενα
@@ -110,3 +110,118 @@ mvnw.cmd package
 Αφού ολοκληρωθεί η απο πάνω εντολή, εκτελέστε το αρχείο ds_group_13-0.0.1-SNAPSHOT.jar που βρίσκεται στον φάκελο target.
 
 Έπειτα η εφαρμογή θα εκτελέιται και θα "ακόυει" στην θύρα 8080 (μπορεί να αλαχθει στο application.properties).
+
+---
+
+# System for reccomendation letters
+This application was created within the course "Distributed Systems" of the 5th semester at Harokopio University.
+The application allows students to request a letter of recommendation from a professor.
+The letter of recommendation after its compilation by the professor is sent by e-mail to the institution from which it was requested.
+
+The application was implemented with Spring Boot and vanilla JS / HTML.
+
+
+- Group 13
+- Topic 3 - Letters of Recommendation
+
+## Prerequisites
+
+The application requires a MySQL (or any other database with jbdc) server for data storage as well as an SMTP mail server for sending emails.
+
+A database with the tables whose creation commands are listed below is required.
+
+```sql
+create table users
+(
+    email varchar (45) not null
+        primary key,
+    password varchar (256) not null,
+    FName varchar (45) not null,
+    LName varchar (45) not null,
+    acc_type tinyint (1) not null,
+    phone_no varchar (45) not null
+);
+```
+
+```sql
+create table applications
+(
+    app_id varchar (255) not null,
+    prof_email varchar (255) null,
+    body varchar (255) null,
+    studfname varchar (255) null,
+    studlname varchar (255) null,
+    Accepted tinyint (1) null,
+    from_mail varchar (255) null,
+    time_stamp varchar (255) null,
+    letter_receiver_email varchar (255) not null,
+    letter_id varchar (255) null,
+    constraint applications_app_id_uindex
+        unique (app_id)
+);
+
+create index applications_letters_id_fk
+    on applications (letter_id);
+
+alter table applications
+    add primary key (app_id);
+```
+
+```sql
+create table letters
+(
+    letter_id varchar (255) not null,
+    app_id varchar (255) null,
+    proffname varchar (255) null,
+    proflname varchar (255) null,
+    body text not null,
+    receiver_email varchar (255) not null,
+    constraint letters_letter_id_uindex
+        unique (letter_id),
+    constraint FK_LETTERS_ON_APP
+        foreign key (app_id) references applications (app_id)
+);
+
+alter table letters
+    add primary key (letter_id);
+```
+
+## Configuration
+
+The application receives all its parameters from the application.properties file located in the src/main/resources folder
+
+By default, the application attempts to connect to a MySQL server on localhost, which contains the schema ds_2021 with the springuser as the username and thePassword as the password.
+
+The following is an explanation of the parameters received by the application.
+
+- spring.datasource.url: The jbdc url of the database to be used.
+- spring.datasource.username: The username that will be used to connect to the database.
+- spring.datasource.password: The password that will be used to connect to the database.
+- email.email: The email address that will be used to connect to the SMTP server but also where the emails sent by the application will come from.
+- email.password: The password required to connect to the SMTP Server.
+- email.smtp-server: The network address of the SMTP server.
+- email.smtp-port: The SMTP server port.
+- email.smtp-auth: (true or false) If authentication by SMTP server is required.
+- email.smtp-s-s-l: (true or false) If SSL encryption is required from the SMTP server.
+
+In the application.properties file provided in the repository, all values except the first 3 are empty.
+
+## Execution
+
+To compile the application, run the ds_group_13 folder:
+
+```bash
+./mvnw package
+```
+In linux / unix / powershell
+
+Or
+
+```cmd
+mvnw.cmd package
+```
+In windows command prompt
+
+After completing the above command, run the ds_group_13-0.0.1-SNAPSHOT.jar file located in the target folder.
+
+The application will then run and "listen" to port 8080 (can be changed in application.properties).
