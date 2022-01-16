@@ -190,7 +190,7 @@ alter table letters
 
 The application receives all its parameters from the application.properties file located in the src/main/resources folder
 
-By default, the application attempts to connect to a MySQL server on localhost, which contains the schema ds_2021 with the springuser as the username and thePassword as the password.
+By default, the application attempts to connect to a MySQL server on localhost, which contains the schema ds_2021 using springuser as the username and thePassword as the password.
 
 The following is an explanation of the parameters received by the application.
 
