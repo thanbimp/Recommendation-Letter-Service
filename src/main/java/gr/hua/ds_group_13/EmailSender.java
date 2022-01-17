@@ -39,7 +39,6 @@ public class EmailSender {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        //Settings for GMAIL
         properties.put("mail.smtp.host", this.emailSenderProperties.getSmtpServer());
         properties.put("mail.smtp.port", this.emailSenderProperties.getSmtpPort());
         properties.put("mail.smtp.ssl.enable", this.emailSenderProperties.getSmtpSSL());
@@ -69,9 +68,7 @@ public class EmailSender {
         MimeBodyPart attachmentBodyPart = new MimeBodyPart();
         try {
             attachmentBodyPart.attachFile(CreatePDF(letter.getBody(), letter.getProfFName(), letter.getProfLName()));
-        } catch (DocumentException | FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
 
@@ -87,7 +84,9 @@ public class EmailSender {
         document.open();
         BaseFont bf = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         document.add(new Paragraph(LetterBody, new Font(bf, 12)));
-        document.add(new Paragraph("\n\n\n\n\n\n" + ProfFName + " " + ProfLName, new Font(bf, 18)));
+        Paragraph nameParagraph=new Paragraph("\n\n\n\n\n\n" + ProfFName + " " + ProfLName, new Font(bf, 18));
+        nameParagraph.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+        document.add(nameParagraph);
         document.close();
         writer.close();
         return new File("Temp.pdf");
