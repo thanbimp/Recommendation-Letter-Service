@@ -5,7 +5,7 @@ function init(){
 
 function getApplications(email){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/myApplicationsProf?email="+email);
+    xhttp.open("GET", "/professor/myApplications?email="+email);
     xhttp.send();
     xhttp.onload =function(){
         makeApplicationsArray(xhttp.responseText);
@@ -35,7 +35,7 @@ function makeList(data){
 
 function onApplicationClicked(id){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/application?appID="+id);
+    xhttp.open("GET", "/professor/application?appID="+id);
     xhttp.send();
     xhttp.onload =function(){
         currentSelectedApplicationID = id;
@@ -83,7 +83,7 @@ function renderApplication(application){
 
 function acceptApplication(result){
     var xhr = new XMLHttpRequest();
-    xhr.open("PATCH","/application");
+    xhr.open("PATCH","/professor/application");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("accepted="+result+"&appID="+currentSelectedApplicationID);
     document.getElementById("listDiv").innerHTML="";
@@ -92,6 +92,6 @@ function acceptApplication(result){
 }
 
 function redirectToLetterPage(){
-    window.location.href="/write_letter?appID="+currentSelectedApplicationID;
+    window.location.href="/professor/write_letter?appID="+currentSelectedApplicationID;
 
 }

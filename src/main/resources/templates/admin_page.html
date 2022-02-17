@@ -4,7 +4,7 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
     <script src="/js/admin_home.js"></script>
     <title>
-        My Applications
+        Users
     </title>
 </head>
 <body onload= "init()">
@@ -14,8 +14,7 @@
         <input class="button" type="submit" value="Sign Out"/>
     </form>
 </div>
-<div  class="maindiv" style="text-align: center" th:if="${(param.letterSave != null)}">The letter was saved.<br>You may return to it at any time by going to the respective application and clicking "Write Letter"</div>
-<div class="maindiv">
+<div class="maindiv" style="text-align: center">
     <div id="listDiv"></div>
     <div id="detailsDiv"></div>
 </div>

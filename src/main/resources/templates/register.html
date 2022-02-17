@@ -3,13 +3,13 @@
 <head>
   <meta charset="ISO-8859-1">
   <link th:href="@{/css/register.css}" rel="stylesheet" />
-  <title>Insert title here</title>
+  <title>Register</title>
 </head>
 <body>
 <div class="errorDiv" th:if="${session.registerError}">
   <p class="text">This user already exists! If you forgot your password,contact us.</p>
 </div>
-<form action="/register" method="post">
+<form th:action="@{/register}" method="post">
   <div class="container">
     <p class="titleText">Register</p>
     <p class="text">Please fill in this form to create an account.</p>
@@ -25,10 +25,10 @@
 
     <p class="text"> I Am Registering as a:</p>
 
-    <input type="radio" id="studRadio" name="accType" value="0">
+    <input type="radio" id="studRadio" name="accType" value="ROLE_STUDENT" required>
     <label class="text" for="studRadio">Student</label>
 
-    <input type="radio" id="profRadio" name="accType" value="1">
+    <input type="radio" id="profRadio" name="accType" value="ROLE_PROFESSOR" required>
     <label class="text" for="profRadio">Professor</label>
 
     <br>

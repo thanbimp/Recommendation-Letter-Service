@@ -2,9 +2,9 @@ function init(){
     getUsers();
 }
 
-function getUsers(email){
+function getUsers(){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/allUsers");
+    xhttp.open("GET", "/admin/allUsers");
     xhttp.send();
     xhttp.onload =function(){
         makeUsersArray(xhttp.responseText);
@@ -34,7 +34,7 @@ function makeList(data){
 
 function onUserClicked(email){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/user?email="+email);
+    xhttp.open("GET", "/admin/user?email="+email);
     xhttp.send();
     xhttp.onload =function(){
         CurrSelectedUserEmail=email;
@@ -49,7 +49,7 @@ function renderUser(user){
     namePar.innerText="Name:\n"+user.fname+" "+user.lname+"\n"+"Email Address: "+user.email;
     var accTypePar=document.createElement("p");
     switch (user.accType){
-        case 0:
+        case "ROLE_STUDENT":
             accTypePar.innerText="Account Type: Student"
             var delBtn=document.createElement("button");
             delBtn.setAttribute("class","button");
@@ -61,7 +61,7 @@ function renderUser(user){
             detailsDiv.appendChild(delBtn);
             break;
 
-        case 1:
+        case "ROLE_PROFESSOR":
             accTypePar.innerText="Account Type: Professor"
             var delBtn=document.createElement("button");
             delBtn.setAttribute("class","button");
@@ -73,7 +73,7 @@ function renderUser(user){
             detailsDiv.appendChild(delBtn);
             break;
 
-        case 2:
+        case "ROLE_ADMIN":
             accTypePar.innerText="Account Type: Administrator"
             detailsDiv.appendChild(namePar);
             detailsDiv.appendChild(accTypePar);

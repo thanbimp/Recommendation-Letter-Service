@@ -1,12 +1,15 @@
 package gr.hua.ds_group_13;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -20,18 +23,19 @@ public class User implements UserDetails {
     private String LName;
     private String PhoneNo;
     /* Account Types:
-    0:Student
-    1:Professor
-    2:Admin (must be set manually in DB)
+    ROLE_STUDENT
+    ROLE_PROFESSOR
+    ROLE_ADMIN
      */
-    private short AccType;
+    private String AccType;
+
 
 
     public User() {
 
     }
 
-    public User(String email, String password, String FName, String LName, short AccType, String PhoneNo) {
+    public User(String email, String password, String FName, String LName, String AccType, String PhoneNo) {
         this.email = email;
         this.password = password;
         this.FName = FName;
@@ -43,7 +47,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.stream(this.getAccType().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -66,6 +72,7 @@ public class User implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
+
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -105,12 +112,16 @@ public class User implements UserDetails {
         this.LName = LName;
     }
 
-    public short getAccType() {
+    public String getAccType() {
         return AccType;
     }
 
-    public void setAccType(short accType) {
+    public void setAccType(String accType) {
         AccType = accType;
+    }
+
+    public boolean hasRole(String roleName) {
+        return this.getAccType().equals(roleName);
     }
 
     public String getPhoneNo() {

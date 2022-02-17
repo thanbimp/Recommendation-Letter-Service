@@ -3,12 +3,12 @@
 <head>
     <link th:href="@{/css/new_application.css}" rel="stylesheet" />
     <meta charset="UTF-8">
-    <title>New Application</title>
+    <title>New Letter</title>
     <script src="/js/write_letter.js"></script>
 </head>
 <body onload="init()">
 <div class="topnav">
-    <a href="/dashboard">My Applications</a>
+    <a>My Applications</a>
     <a href="/profile">My Profile</a>
     <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
     <form class="logoutBtn" th:action="@{/logout}" method="post">

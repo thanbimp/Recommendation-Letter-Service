@@ -5,7 +5,7 @@ function init(){
 
 function getApplications(){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/myApplications");
+    xhttp.open("GET", "/student/myApplications");
     xhttp.send();
     xhttp.onload =function(){
         makeApplicationsArray(xhttp.responseText);
@@ -33,7 +33,7 @@ function makeList(data){
 
 function onApplicationClicked(id){
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/application?appID="+id);
+    xhttp.open("GET", "/student/application?appID="+id);
     xhttp.send();
     xhttp.onload =function(){
         renderApplication(JSON.parse(xhttp.responseText));

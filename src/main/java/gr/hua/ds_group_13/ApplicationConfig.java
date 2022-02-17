@@ -1,5 +1,6 @@
 package gr.hua.ds_group_13;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,9 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private RedirectHandler redirectHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -24,10 +28,13 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll() // This will be your home screen URL
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
+                .antMatchers("/student/**").hasRole("STUDENT")
+                .antMatchers("/professor/**").hasRole("PROFESSOR")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/dashboard")
+                .successHandler(redirectHandler)
                 .usernameParameter("email")
                 .loginPage("/login")
                 .permitAll()
