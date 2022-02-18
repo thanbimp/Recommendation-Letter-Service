@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
-body{
-    background: #43C6AC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #191654, #43C6AC);  /* Chrome 10-25, Safari 5.1-6 */
+body {
+    background: #43C6AC; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #191654, #43C6AC); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 
-.emailtext{
+.emailtext {
     display: inline;
     font-family: 'Ubuntu', sans-serif;
     padding-right: 20px;
 }
 
-.msgDiv{
+.msgDiv {
     text-align: center;
     width: 60%;
     margin: auto;
@@ -24,11 +24,12 @@ body{
     padding: 10px;
 }
 
-.logoutBtn{
+.logoutBtn {
     display: inline-block;
     padding-top: 7px;
     padding-right: 20px;
 }
+
 .topnav {
     background-color: #fafffb;
     overflow: hidden;
@@ -38,13 +39,13 @@ body{
     padding: 0;
 }
 
-li:hover{
+li:hover {
     background-color: #42bfa9;
     color: black;
     cursor: pointer;
 }
 
-li:active{
+li:active {
     background-color: #42bfa9;
     color: black;
 }
@@ -71,25 +72,25 @@ li:active{
     color: white;
 }
 
-#detailsDiv{
+#detailsDiv {
     flex: 2;
 }
 
-#listDiv{
+#listDiv {
     flex: 1;
-    border-right: 4px solid black ;
+    border-right: 4px solid black;
 }
 
 
-#newAppDiv{
-    flex:1;
+#newAppDiv {
+    flex: 1;
 }
 
-#newAppBtn{
+#newAppBtn {
     display: block;
 }
 
-.maindiv{
+.maindiv {
     display: flex;
     text-align: center;
     width: 60%;
@@ -101,24 +102,25 @@ li:active{
     padding: 10px;
 }
 
-.button{
+.button {
     background-color: #42bfa9;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
 }
+
 .button:hover {
     background-color: #76bbaa; /* Green */
     color: #000000;
 }
 
-.text{
+.text {
     font-family: 'Ubuntu', sans-serif;
     font-size: 24px;
 }
 
-#newAppBtn{
+#newAppBtn {
     display: block;
     margin-top: 15px;
     margin-left: 50vw;
@@ -130,12 +132,12 @@ li:active{
     border-radius: 12px;
 }
 
-#newAppBtn:hover{
+#newAppBtn:hover {
     background-color: #5dc5b0; /* Green */
     color: #000000;
 }
 
-#newAppBtn:active{
+#newAppBtn:active {
     background-color: #42bfa9; /* Green */
     color: #000000;
 }

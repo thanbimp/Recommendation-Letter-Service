@@ -30,7 +30,6 @@ public class User implements UserDetails {
     private String AccType;
 
 
-
     public User() {
 
     }
@@ -57,11 +56,14 @@ public class User implements UserDetails {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String getUsername() {
         return email;
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -72,7 +74,6 @@ public class User implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
-
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -90,10 +91,6 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFName() {

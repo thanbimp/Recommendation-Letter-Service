@@ -1,13 +1,13 @@
-function init(){
+function init() {
     getApplications();
 }
 
 
-function getApplications(){
+function getApplications() {
     let xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/student/myApplications");
     xhttp.send();
-    xhttp.onload =function(){
+    xhttp.onload = function () {
         makeApplicationsArray(xhttp.responseText);
     }
 }
@@ -17,47 +17,46 @@ function makeApplicationsArray(responseText) {
     makeList(as);
 }
 
-function makeList(data){
+function makeList(data) {
     var listDiv = document.getElementById('listDiv');
     var ul = document.createElement('ul');
     listDiv.appendChild(ul);
     for (var i = 0; i < data.length; ++i) {
         var li = document.createElement('li');
-        li.setAttribute("id",data[i].appId);
-        li.setAttribute("onclick","onApplicationClicked(this.id)")
+        li.setAttribute("id", data[i].appId);
+        li.setAttribute("onclick", "onApplicationClicked(this.id)")
         var textnode = document.createTextNode(data[i].timeStamp);
         li.appendChild(textnode);
         ul.appendChild(li);
     }
 }
 
-function onApplicationClicked(id){
+function onApplicationClicked(id) {
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/student/application?appID="+id);
+    xhttp.open("GET", "/student/application?appID=" + id);
     xhttp.send();
-    xhttp.onload =function(){
+    xhttp.onload = function () {
         renderApplication(JSON.parse(xhttp.responseText));
     }
 }
 
-function renderApplication(application){
-    var detailsDiv=document.getElementById("detailsDiv");
-    detailsDiv.innerHTML="";
-    var namePar=document.createElement("p");
-    namePar.innerText="Name:\n"+application.studFName+" "+application.studLName+"("+application.fromMail+")"+"\n";
-    var profToPar=document.createElement("p");
-    profToPar.innerText="To professor:\n"+application.profEmail;
-    var recieverPar=document.createElement("p");
-    recieverPar.innerText="Letter Recipient:\n"+application.letterReceiverEmail;
-    var acceptedPar=document.createElement("p");
-    if(application.accepted===null){
-        acceptedPar.innerText="Accepted:No";
+function renderApplication(application) {
+    var detailsDiv = document.getElementById("detailsDiv");
+    detailsDiv.innerHTML = "";
+    var namePar = document.createElement("p");
+    namePar.innerText = "Name:\n" + application.studFName + " " + application.studLName + "(" + application.fromMail + ")" + "\n";
+    var profToPar = document.createElement("p");
+    profToPar.innerText = "To professor:\n" + application.profEmail;
+    var recieverPar = document.createElement("p");
+    recieverPar.innerText = "Letter Recipient:\n" + application.letterReceiverEmail;
+    var acceptedPar = document.createElement("p");
+    if (application.accepted === null) {
+        acceptedPar.innerText = "Accepted:No";
+    } else {
+        acceptedPar.innerText = "Accepted:Yes";
     }
-    else {
-        acceptedPar.innerText="Accepted:Yes";
-    }
-    var bodyPar=document.createElement("p");
-    bodyPar.innerText="Application Body:\n"+application.body+"\n";
+    var bodyPar = document.createElement("p");
+    bodyPar.innerText = "Application Body:\n" + application.body + "\n";
     detailsDiv.appendChild(namePar);
     detailsDiv.appendChild(profToPar);
     detailsDiv.appendChild(recieverPar);

@@ -53,16 +53,16 @@ public class Application {
         return timeStamp;
     }
 
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     public String getLetterReceiverEmail() {
         return letterReceiverEmail;
     }
 
     public void setLetterReceiverEmail(String letterReceiverEmail) {
         this.letterReceiverEmail = letterReceiverEmail;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     public String getAppId() {

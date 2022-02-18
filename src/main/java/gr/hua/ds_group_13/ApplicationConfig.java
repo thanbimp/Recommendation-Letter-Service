@@ -11,13 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class ApplicationConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private RedirectHandler redirectHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Autowired
-    private RedirectHandler redirectHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -16,7 +16,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -30,6 +29,20 @@ public class EmailSender {
 
     private String email;
     private String password;
+
+    public static File CreatePDF(String LetterBody, String ProfFName, String ProfLName) throws DocumentException, IOException {
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Temp.pdf"));
+        document.open();
+        BaseFont bf = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        document.add(new Paragraph(LetterBody, new Font(bf, 12)));
+        Paragraph nameParagraph = new Paragraph("\n\n\n\n\n\n" + ProfFName + " " + ProfLName, new Font(bf, 18));
+        nameParagraph.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+        document.add(nameParagraph);
+        document.close();
+        writer.close();
+        return new File("Temp.pdf");
+    }
 
     public void SendEmail(Letter letter) throws MessagingException {
 
@@ -76,19 +89,5 @@ public class EmailSender {
         message.setContent(multipart);
 
         Transport.send(message);
-    }
-
-    public static File CreatePDF(String LetterBody, String ProfFName, String ProfLName) throws DocumentException, IOException {
-        Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Temp.pdf"));
-        document.open();
-        BaseFont bf = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        document.add(new Paragraph(LetterBody, new Font(bf, 12)));
-        Paragraph nameParagraph=new Paragraph("\n\n\n\n\n\n" + ProfFName + " " + ProfLName, new Font(bf, 18));
-        nameParagraph.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-        document.add(nameParagraph);
-        document.close();
-        writer.close();
-        return new File("Temp.pdf");
     }
 }

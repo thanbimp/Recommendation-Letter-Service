@@ -1,23 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
-body{
-    background: #43C6AC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #191654, #43C6AC);  /* Chrome 10-25, Safari 5.1-6 */
+body {
+    background: #43C6AC; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #191654, #43C6AC); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 
-.emailtext{
+.emailtext {
     display: inline;
     font-family: 'Ubuntu', sans-serif;
     padding-right: 20px;
 }
 
-.logoutBtn{
+.logoutBtn {
     display: inline-block;
     padding-top: 7px;
     padding-right: 20px;
 }
+
 .topnav {
     background-color: #fafffb;
     overflow: hidden;
@@ -27,7 +28,7 @@ body{
     padding: 0;
 }
 
-.maindiv{
+.maindiv {
     align-content: center;
     width: 60%;
     text-align: center;
@@ -39,25 +40,25 @@ body{
     padding: 10px;
 }
 
-.button{
+.button {
     background-color: #42bfa9;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
 }
+
 .button:hover {
     background-color: #8bbdb0; /* Green */
     color: #000000;
 }
 
-.textBox{
+.textBox {
     width: 50%;
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
 }
-
 
 
 .topnav a {
@@ -81,7 +82,7 @@ body{
     color: white;
 }
 
-.bigTextBox{
+.bigTextBox {
     height: 25vw;
     width: 100%;
 }

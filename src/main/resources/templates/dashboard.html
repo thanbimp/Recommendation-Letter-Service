@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+>
 <head>
-  <link th:href="@{/css/dashboard.css}" rel="stylesheet" />
-  <script src="/js/dashboard_student.js"></script>
-  <title>
-    My Applications
-  </title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
+    <script src="/js/dashboard_student.js"></script>
+    <title>
+        My Applications
+    </title>
 </head>
-<body onload= "init()">
+<body onload="init()">
 <div class="topnav">
-  <a href="/dashboard">My Applications</a>
-  <a href="/profile">My Profile</a>
-  <p id="userEmail" class="emailtext" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
-  <form class="logoutBtn" th:action="@{/logout}" method="post">
-    <input class="button" type="submit" value="Sign Out"/>
-  </form>
+    <a href="/dashboard">My Applications</a>
+    <a href="/profile">My Profile</a>
+    <p class="emailtext" id="userEmail" th:inline="text">[[${#httpServletRequest.remoteUser}]]</p>
+    <form class="logoutBtn" method="post" th:action="@{/logout}">
+        <input class="button" type="submit" value="Sign Out"/>
+    </form>
 </div>
-<div  class="msgDiv" style="text-align: center" th:if="${(param.succ != null)}">Application sent successfully!</div>
+<div class="msgDiv" style="text-align: center" th:if="${(param.succ != null)}">Application sent successfully!</div>
 <div class="maindiv">
-  <div id="listDiv"></div>
-  <div id="detailsDiv"></div>
+    <div id="listDiv"></div>
+    <div id="detailsDiv"></div>
 </div>
 <button class="button" id="newAppBtn" onclick="window.location.href='new_application'">New Application</button>
 </body>

@@ -1,12 +1,12 @@
-function init(){
+function init() {
     getUsers();
 }
 
-function getUsers(){
+function getUsers() {
     let xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/admin/allUsers");
     xhttp.send();
-    xhttp.onload =function(){
+    xhttp.onload = function () {
         makeUsersArray(xhttp.responseText);
     }
 }
@@ -18,63 +18,63 @@ function makeUsersArray(responseText) {
     makeList(as);
 }
 
-function makeList(data){
+function makeList(data) {
     var listDiv = document.getElementById('listDiv');
     var ul = document.createElement('ul');
     listDiv.appendChild(ul);
     for (var i = 0; i < data.length; ++i) {
         var li = document.createElement('li');
-        li.setAttribute("id",data[i].email);
-        li.setAttribute("onclick","onUserClicked(this.id)")
+        li.setAttribute("id", data[i].email);
+        li.setAttribute("onclick", "onUserClicked(this.id)")
         var textnode = document.createTextNode(data[i].email);
         li.appendChild(textnode);
         ul.appendChild(li);
     }
 }
 
-function onUserClicked(email){
+function onUserClicked(email) {
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/admin/user?email="+email);
+    xhttp.open("GET", "/admin/user?email=" + email);
     xhttp.send();
-    xhttp.onload =function(){
-        CurrSelectedUserEmail=email;
+    xhttp.onload = function () {
+        CurrSelectedUserEmail = email;
         renderUser(JSON.parse(xhttp.responseText));
     }
 }
 
-function renderUser(user){
-    var detailsDiv=document.getElementById("detailsDiv");
-    detailsDiv.innerHTML="";
-    var namePar=document.createElement("p");
-    namePar.innerText="Name:\n"+user.fname+" "+user.lname+"\n"+"Email Address: "+user.email;
-    var accTypePar=document.createElement("p");
-    switch (user.accType){
+function renderUser(user) {
+    var detailsDiv = document.getElementById("detailsDiv");
+    detailsDiv.innerHTML = "";
+    var namePar = document.createElement("p");
+    namePar.innerText = "Name:\n" + user.fname + " " + user.lname + "\n" + "Email Address: " + user.email;
+    var accTypePar = document.createElement("p");
+    switch (user.accType) {
         case "ROLE_STUDENT":
-            accTypePar.innerText="Account Type: Student"
-            var delBtn=document.createElement("button");
-            delBtn.setAttribute("class","button");
-            delBtn.setAttribute("onclick","deleteUser()");
-            delBtn.setAttribute("style","background-color:#ff4646");
-            delBtn.innerText="Delete User";
+            accTypePar.innerText = "Account Type: Student"
+            var delBtn = document.createElement("button");
+            delBtn.setAttribute("class", "button");
+            delBtn.setAttribute("onclick", "deleteUser()");
+            delBtn.setAttribute("style", "background-color:#ff4646");
+            delBtn.innerText = "Delete User";
             detailsDiv.appendChild(namePar);
             detailsDiv.appendChild(accTypePar);
             detailsDiv.appendChild(delBtn);
             break;
 
         case "ROLE_PROFESSOR":
-            accTypePar.innerText="Account Type: Professor"
-            var delBtn=document.createElement("button");
-            delBtn.setAttribute("class","button");
-            delBtn.setAttribute("onclick","deleteUser()");
-            delBtn.setAttribute("style","background-color:#ff4646");
-            delBtn.innerText="Delete User";
+            accTypePar.innerText = "Account Type: Professor"
+            var delBtn = document.createElement("button");
+            delBtn.setAttribute("class", "button");
+            delBtn.setAttribute("onclick", "deleteUser()");
+            delBtn.setAttribute("style", "background-color:#ff4646");
+            delBtn.innerText = "Delete User";
             detailsDiv.appendChild(namePar);
             detailsDiv.appendChild(accTypePar);
             detailsDiv.appendChild(delBtn);
             break;
 
         case "ROLE_ADMIN":
-            accTypePar.innerText="Account Type: Administrator"
+            accTypePar.innerText = "Account Type: Administrator"
             detailsDiv.appendChild(namePar);
             detailsDiv.appendChild(accTypePar);
             break;
@@ -82,12 +82,14 @@ function renderUser(user){
 
 }
 
-function deleteUser(){
+function deleteUser() {
     var xhr = new XMLHttpRequest();
-    xhr.open("PATCH","/admin/delete");
+    xhr.open("PATCH", "/admin/delete");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("userEmail="+CurrSelectedUserEmail);
-    document.getElementById("listDiv").innerHTML="";
-    document.getElementById("detailsDiv").innerHTML=""
-    setTimeout(function (){init()},50);
+    xhr.send("userEmail=" + CurrSelectedUserEmail);
+    document.getElementById("listDiv").innerHTML = "";
+    document.getElementById("detailsDiv").innerHTML = ""
+    setTimeout(function () {
+        init()
+    }, 50);
 }

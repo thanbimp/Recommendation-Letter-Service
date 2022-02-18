@@ -35,6 +35,10 @@ public class Letter {
         return letter_id;
     }
 
+    public void setId(String id) {
+        this.letter_id = id;
+    }
+
     public Application getAppID() {
         return AppID;
     }
@@ -49,10 +53,6 @@ public class Letter {
 
     public void setReceiverEmail(String receiverEmail) {
         this.receiverEmail = receiverEmail;
-    }
-
-    public void setId(String id) {
-        this.letter_id = id;
     }
 
     public String getProfFName() {

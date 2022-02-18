@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="ISO-8859-1">
-  <link th:href="@{/css/register.css}" rel="stylesheet" />
-  <title>Register</title>
+    <meta charset="ISO-8859-1">
+    <link rel="stylesheet" th:href="@{/css/register.css}"/>
+    <title>Register</title>
 </head>
 <body>
 <div class="errorDiv" th:if="${session.registerError}">
-  <p class="text">This user already exists! If you forgot your password,contact us.</p>
+    <p class="text">This user already exists! If you forgot your password,contact us.</p>
 </div>
-<form th:action="@{/register}" method="post">
-  <div class="container">
-    <p class="titleText">Register</p>
-    <p class="text">Please fill in this form to create an account.</p>
-    <hr>
-    <input class="textBox" type="email" placeholder="Enter your Email" name="email" id="email" required>
-    <input class="textBox" type="password" placeholder="Enter Password" name="password" id="password" required>
-    <input class="textBox" type="text" placeholder="Enter First Name" name="fname" id="fname" required>
-    <input class="textBox" type="text" placeholder="Enter Last Name" name="lname" id="lname" required>
-    <input class="textBox" type="tel" placeholder="Enter Your Phone Number" name="phoneNo" id="phoneNo" required>
+<form method="post" th:action="@{/register}">
+    <div class="container">
+        <p class="titleText">Register</p>
+        <p class="text">Please fill in this form to create an account.</p>
+        <hr>
+        <input class="textBox" id="email" name="email" placeholder="Enter your Email" required type="email">
+        <input class="textBox" id="password" name="password" placeholder="Enter Password" required type="password">
+        <input class="textBox" id="fname" name="fname" placeholder="Enter First Name" required type="text">
+        <input class="textBox" id="lname" name="lname" placeholder="Enter Last Name" required type="text">
+        <input class="textBox" id="phoneNo" name="phoneNo" placeholder="Enter Your Phone Number" required type="tel">
 
 
-    <br>
+        <br>
 
-    <p class="text"> I Am Registering as a:</p>
+        <p class="text"> I Am Registering as a:</p>
 
-    <input type="radio" id="studRadio" name="accType" value="ROLE_STUDENT" required>
-    <label class="text" for="studRadio">Student</label>
+        <input id="studRadio" name="accType" required type="radio" value="ROLE_STUDENT">
+        <label class="text" for="studRadio">Student</label>
 
-    <input type="radio" id="profRadio" name="accType" value="ROLE_PROFESSOR" required>
-    <label class="text" for="profRadio">Professor</label>
+        <input id="profRadio" name="accType" required type="radio" value="ROLE_PROFESSOR">
+        <label class="text" for="profRadio">Professor</label>
 
-    <br>
-    <br>
-    <button  type="submit" class="registerbtn">Register</button>
-  </div>
+        <br>
+        <br>
+        <button class="registerbtn" type="submit">Register</button>
+    </div>
 
 </form>
 </body>

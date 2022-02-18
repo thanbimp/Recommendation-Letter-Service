@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
-body{
-    background: #43C6AC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #191654, #43C6AC);  /* Chrome 10-25, Safari 5.1-6 */
+body {
+    background: #43C6AC; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #191654, #43C6AC); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 
-div{
+div {
     text-align: center;
     width: 60%;
     margin: auto;
@@ -19,23 +19,25 @@ div{
 }
 
 
-button{
+button {
     background-color: #42bfa9;
     font-size: 12px;
     padding: 10px 24px;
     border: none;
     border-radius: 12px;
 }
+
 button:hover {
     background-color: #7cbdb2; /* Green */
     color: #000000;
 }
 
-.text{
+.text {
     font-family: 'Ubuntu', sans-serif;
     font-size: 24px;
 }
-.titleText{
+
+.titleText {
     font-size: 96px;
     font-family: 'Pacifico', cursive;
 }
