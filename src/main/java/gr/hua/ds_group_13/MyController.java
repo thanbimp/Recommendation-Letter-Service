@@ -1,15 +1,18 @@
 package gr.hua.ds_group_13;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,17 +22,11 @@ import java.util.stream.Collectors;
 
 @Controller
 public class MyController {
+
+    @Autowired
+    KeycloakUserService keycloakUserService;
     @Autowired
     EmailSender emailSender;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private SecurityUserDetailsService userDetailsManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -43,14 +40,26 @@ public class MyController {
         return "index";
     }
 
-
-    @GetMapping("/login")
-    private String login(HttpServletRequest request, HttpSession session) {
-        session.setAttribute(
-                "error", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION")
-        );
-        return "login";
+    @PostMapping(path = "/logout")
+    public String logout(HttpServletRequest request) throws ServletException {
+        request.logout();
+        return "index";
     }
+
+    @GetMapping("/dashboard")
+    public String dashboard(HttpServletResponse response) {
+        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User authUser = KeycloakUserService.getUser(keycloakAuthenticationToken.getAccount().getPrincipal().toString());
+        if (authUser.getAccType().equals("STUDENT")) {
+            return "redirect:student/dashboard";
+        } else if (authUser.getAccType().equals("PROFESSOR")) {
+            return "redirect:professor/dashboard";
+        } else if (authUser.getAccType().equals("ADMIN")) {
+            return "redirect:admin/dashboard";
+        }
+        return "redirect:/error";
+    }
+
 
 
     @GetMapping("/admin/dashboard")
@@ -68,18 +77,6 @@ public class MyController {
         return "dashboard";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(HttpServletResponse response) {
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (authUser.hasRole("ROLE_STUDENT")) {
-            return "redirect:student/dashboard";
-        } else if (authUser.hasRole("ROLE_PROFESSOR")) {
-            return "redirect:professor/dashboard";
-        } else if (authUser.hasRole("ROLE_ADMIN")) {
-            return "redirect:admin/dashboard";
-        }
-        return "redirect:/error";
-    }
 
     @GetMapping("/error")
     public String errorPage() {
@@ -90,10 +87,10 @@ public class MyController {
     @PatchMapping("/admin/delete")
     @ResponseBody
     private String deleteUser(@RequestParam Map<String, String> body, HttpServletResponse response) {
-        if (userRepository.findUserByEmail(body.get("userEmail")).isPresent()) {
-            userRepository.delete(userRepository.getById(body.get("userEmail")));
+        if (KeycloakUserService.getUser(KeycloakUserService.getUIDfromEmail(body.get("userEmail"))).getEmail() != null) {
+            KeycloakUserService.deleteUser(KeycloakUserService.getUIDfromEmail(body.get("userEmail")));
             return "true";
-        } else {
+        } else  {
             return "false";
         }
     }
@@ -108,15 +105,10 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
-        if (userRepository.findUserByEmail(body.get("email")).isPresent()) {
-            session.setAttribute("registerError", true);
-            return "redirect:register";
-        }
-        User user = new User(body.get("email"), passwordEncoder.encode(body.get("password")), body.get("fname"), body.get("lname"), body.get("accType"), body.get("phoneNo"));
-        userDetailsManager.createUser(user);
-        session.setAttribute("registered", true);
-        return "redirect:login";
+    @ResponseBody
+    private void addUser(@RequestParam Map<String, String> body, HttpSession session) {
+        User user = new User(body.get("email"), body.get("password"), body.get("fname"), body.get("lname"), body.get("phoneNo"), body.get("accType"));
+        keycloakUserService.addUser(user);
     }
 
 
@@ -126,7 +118,8 @@ public class MyController {
     )
     @ResponseBody
     private User getCurrUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        return KeycloakUserService.getUser(keycloakAuthenticationToken.getAccount().getPrincipal().toString());
     }
 
     @GetMapping(
@@ -135,7 +128,7 @@ public class MyController {
     )
     @ResponseBody
     private User getUser(@RequestParam Map<String, String> body) {
-        return userRepository.findById(body.get("email")).get();
+        return KeycloakUserService.getUser(KeycloakUserService.getUIDfromEmail(body.get("email")));
     }
 
     @GetMapping(
@@ -144,7 +137,7 @@ public class MyController {
     )
     @ResponseBody
     private List<User> getAllUsers() {
-        return userRepository.findAll();
+       return KeycloakUserService.getAllUsers();
     }
 
     @GetMapping(
@@ -164,23 +157,20 @@ public class MyController {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         currentUser.setFName(body.get("fname"));
         currentUser.setLName(body.get("lname"));
-        if (!body.get("password").isBlank()) {
-            currentUser.setPassword(passwordEncoder.encode(body.get("password")));
-        }
         currentUser.setPhoneNo(body.get("phoneNo"));
-        userRepository.save(currentUser);
+        //userRepository.save(currentUser);
     }
 
     @PostMapping(value = "/student/application")
     @ResponseBody
     private String addNewApplication(@RequestParam Map<String, String> body) {
-        if (userRepository.findUserByEmail(body.get("profEmail")).isPresent()) {
-            if (userRepository.findUserByEmail(body.get("profEmail")).get().hasRole("PROFESSOR")) {
+        if (KeycloakUserService.getUser(KeycloakUserService.getUIDfromEmail(body.get("profEmail"))).getEmail() != null) {
+           if (!KeycloakUserService.getInstance().get(KeycloakUserService.getUIDfromEmail(body.get("profEmail"))).roles().realmLevel().listAll().get(0).toString().equals("PROFESSOR")) {
                 return "false";
             } else {
                 Application application = new Application(body.get("profEmail"), body.get("appBody"), body.get("fname"), body.get("lname"), body.get("fromMail"), body.get("toMail"));
                 applicationRepository.save(application);
-                return "true";
+               return "true";
             }
         } else {
             return "false";
@@ -222,7 +212,7 @@ public class MyController {
             letter.setBody(body.get("body"));
         } else {
             Application tempApp = applicationRepository.getById(body.get("appID"));
-            letter = new Letter(userRepository.findUserByEmail(tempApp.getProfEmail()).get().getFName(), userRepository.findUserByEmail(tempApp.getProfEmail()).get().getLName(), body.get("body"), tempApp, body.get("receiverEmail"));
+            letter = new Letter(KeycloakUserService.getUser(KeycloakUserService.getUIDfromEmail(tempApp.getProfEmail())).getFName(),KeycloakUserService.getUser(KeycloakUserService.getUIDfromEmail(tempApp.getProfEmail())).getLName(), body.get("body"), tempApp, body.get("receiverEmail"));
         }
         letterRepository.save(letter);
         Application relatedApplication = applicationRepository.getById(body.get("appID"));
@@ -253,7 +243,8 @@ public class MyController {
     @ResponseBody
     private List<Application> getApplicationsForStudent() {
         List<Application> AllApplications = applicationRepository.findAll();
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User authUser = KeycloakUserService.getUser(keycloakAuthenticationToken.getAccount().getPrincipal().toString());
         return AllApplications.stream().filter(o -> o.getFromMail().equals(authUser.getEmail())).collect(Collectors.toList());
     }
 
@@ -263,7 +254,8 @@ public class MyController {
     )
     @ResponseBody
     private List<Application> getApplicationsForProf(HttpServletResponse response) {
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User authUser = KeycloakUserService.getUser(keycloakAuthenticationToken.getAccount().getPrincipal().toString());
         List<Application> AllApplications = applicationRepository.findAll();
         //only return applications to the professor
         return AllApplications.stream().filter(o -> o.getProfEmail().equals(authUser.getEmail())).collect(Collectors.toList());
@@ -300,18 +292,5 @@ public class MyController {
         return "profile";
     }
 
-
-    private String getErrorMessage(HttpServletRequest request, String key) {
-        Exception exception = (Exception) request.getSession().getAttribute(key);
-        String error;
-        if (exception instanceof BadCredentialsException) {
-            error = "Invalid username and password!";
-        } else if (exception instanceof LockedException) {
-            error = exception.getMessage();
-        } else {
-            error = "Invalid username and password!";
-        }
-        return error;
-    }
 
 }

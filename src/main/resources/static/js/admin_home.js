@@ -49,7 +49,7 @@ function renderUser(user) {
     namePar.innerText = "Name:\n" + user.fname + " " + user.lname + "\n" + "Email Address: " + user.email;
     var accTypePar = document.createElement("p");
     switch (user.accType) {
-        case "ROLE_STUDENT":
+        case "STUDENT":
             accTypePar.innerText = "Account Type: Student"
             var delBtn = document.createElement("button");
             delBtn.setAttribute("class", "button");
@@ -61,7 +61,7 @@ function renderUser(user) {
             detailsDiv.appendChild(delBtn);
             break;
 
-        case "ROLE_PROFESSOR":
+        case "PROFESSOR":
             accTypePar.innerText = "Account Type: Professor"
             var delBtn = document.createElement("button");
             delBtn.setAttribute("class", "button");
@@ -73,7 +73,7 @@ function renderUser(user) {
             detailsDiv.appendChild(delBtn);
             break;
 
-        case "ROLE_ADMIN":
+        case "ADMIN":
             accTypePar.innerText = "Account Type: Administrator"
             detailsDiv.appendChild(namePar);
             detailsDiv.appendChild(accTypePar);

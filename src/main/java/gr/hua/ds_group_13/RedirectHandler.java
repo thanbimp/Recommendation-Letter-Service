@@ -1,5 +1,6 @@
 package gr.hua.ds_group_13;
 
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -15,20 +16,21 @@ public class RedirectHandler extends SavedRequestAwareAuthenticationSuccessHandl
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        User userDetails = (User) authentication.getPrincipal();
+        UserRepresentation userRepresentation = (UserRepresentation) authentication.getPrincipal();
+        //User currUser = new User(userRepresentation.getEmail(),null,userRepresentation.getFirstName(),userRepresentation.getLastName(),userRepresentation.getAttributes().get("phoneNo"),"STUDENT");
 
         String redirectURL = request.getContextPath();
 
-        if (userDetails.hasRole("ROLE_STUDENT")) {
+        //if (userDetails.hasRole("ROLE_STUDENT")) {
             redirectURL = "/student/dashboard";
-        } else if (userDetails.hasRole("ROLE_PROFESSOR")) {
+        //} else if (userDetails.hasRole("ROLE_PROFESSOR")) {
             redirectURL = "/professor/dashboard";
-        } else if (userDetails.hasRole("ROLE_ADMIN")) {
+      // } else if (userDetails.hasRole("ROLE_ADMIN")) {
             redirectURL = "/admin/dashboard";
-        }
-
-        response.sendRedirect(redirectURL);
-
     }
+
+       // response.sendRedirect(redirectURL);
+
+   // }
 
 }
