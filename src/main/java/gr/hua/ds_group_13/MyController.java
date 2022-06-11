@@ -46,12 +46,13 @@ public class MyController {
     public String dashboard(HttpServletResponse response) {
         KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         User authUser = KeycloakUserService.getUser(keycloakAuthenticationToken.getAccount().getPrincipal().toString());
-        if (authUser.getAccType().equals("STUDENT")) {
-            return "redirect:student/dashboard";
-        } else if (authUser.getAccType().equals("PROFESSOR")) {
-            return "redirect:professor/dashboard";
-        } else if (authUser.getAccType().equals("ADMIN")) {
-            return "redirect:admin/dashboard";
+        switch (authUser.getAccType()) {
+            case "STUDENT":
+                return "redirect:student/dashboard";
+            case "PROFESSOR":
+                return "redirect:professor/dashboard";
+            case "ADMIN":
+                return "redirect:admin/dashboard";
         }
         return "redirect:/error";
     }
@@ -104,7 +105,7 @@ public class MyController {
     private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
         User user = new User(body.get("email"), body.get("password"), body.get("fname"), body.get("lname"), body.get("phoneNo"), body.get("accType"));
         keycloakUserService.addUser(user);
-        return "redirect:dashboard";
+        return "redirect:/dashboard";
     }
 
 
