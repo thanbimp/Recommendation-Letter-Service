@@ -1,12 +1,8 @@
 package gr.hua.ds_group_13;
 
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.representations.AccessToken;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -106,9 +102,10 @@ public class MyController {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseBody
-    private void addUser(@RequestParam Map<String, String> body, HttpSession session) {
+    private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
         User user = new User(body.get("email"), body.get("password"), body.get("fname"), body.get("lname"), body.get("phoneNo"), body.get("accType"));
         keycloakUserService.addUser(user);
+        return "redirect:/dashboard";
     }
 
 
