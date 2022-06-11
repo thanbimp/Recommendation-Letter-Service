@@ -101,7 +101,6 @@ public class MyController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
             MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    @ResponseBody
     private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
         User user = new User(body.get("email"), body.get("password"), body.get("fname"), body.get("lname"), body.get("phoneNo"), body.get("accType"));
         keycloakUserService.addUser(user);
