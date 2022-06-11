@@ -105,7 +105,7 @@ public class MyController {
     private String addUser(@RequestParam Map<String, String> body, HttpSession session) {
         User user = new User(body.get("email"), body.get("password"), body.get("fname"), body.get("lname"), body.get("phoneNo"), body.get("accType"));
         keycloakUserService.addUser(user);
-        return "redirect:/dashboard";
+        return "redirect:dashboard";
     }
 
 
