@@ -14,66 +14,6 @@
 Η εφαρμογή απαιτεί εναν MySQL (η οποιαδήποτε αλλη βαση με jbdc) server για την αποθήκευση δεδομένων καθως και έναν SMTP
 mail server για την αποστολή emails.
 
-Απαιτείτε μία βάση δεδομένων με τα tables που οι εντολές δημιουργίας τους παρατίθενται απο κάτω.
-
-```sql
-create table users
-(
-    email    varchar(45)  not null
-        primary key,
-    password varchar(256) not null,
-    FName    varchar(45)  not null,
-    LName    varchar(45)  not null,
-    acc_type tinyint(1)   not null,
-    phone_no varchar(45)  not null
-);
-```
-
-```sql
-create table applications
-(
-    app_id                varchar(255) not null,
-    prof_email            varchar(255) null,
-    body                  varchar(255) null,
-    studfname             varchar(255) null,
-    studlname             varchar(255) null,
-    Accepted              tinyint(1)   null,
-    from_mail             varchar(255) null,
-    time_stamp            varchar(255) null,
-    letter_receiver_email varchar(255) not null,
-    letter_id             varchar(255) null,
-    constraint applications_app_id_uindex
-        unique (app_id)
-);
-
-create index applications_letters_id_fk
-    on applications (letter_id);
-
-alter table applications
-    add primary key (app_id);
-```
-
-```sql
-create table letters
-(
-    letter_id      varchar(255) not null,
-    app_id         varchar(255) null,
-    proffname      varchar(255) null,
-    proflname      varchar(255) null,
-    body           text         not null,
-    receiver_email varchar(255) not null,
-    constraint letters_letter_id_uindex
-        unique (letter_id),
-    constraint FK_LETTERS_ON_APP
-        foreign key (app_id) references applications (app_id)
-);
-
-alter table letters
-    add primary key (letter_id);
-```
-
-## Παραμετροποίηση
-
 Η εφαρμογή λαμβάνει ολες τις παραμέτρους της απο το αρχειο application.properties που βρίσκεται στον φάκελο
 src/main/resources
 
@@ -134,64 +74,6 @@ The application was implemented with Spring Boot and vanilla JS / HTML.
 
 The application requires a MySQL (or any other database with jbdc) server for data storage as well as an SMTP mail
 server for sending emails.
-
-A database with the tables whose creation commands are listed below is required.
-
-```sql
-create table users
-(
-    email varchar (45) not null
-        primary key,
-    password varchar (256) not null,
-    FName varchar (45) not null,
-    LName varchar (45) not null,
-    acc_type tinyint (1) not null,
-    phone_no varchar (45) not null
-);
-```
-
-```sql
-create table applications
-(
-    app_id varchar (255) not null,
-    prof_email varchar (255) null,
-    body varchar (255) null,
-    studfname varchar (255) null,
-    studlname varchar (255) null,
-    Accepted tinyint (1) null,
-    from_mail varchar (255) null,
-    time_stamp varchar (255) null,
-    letter_receiver_email varchar (255) not null,
-    letter_id varchar (255) null,
-    constraint applications_app_id_uindex
-        unique (app_id)
-);
-
-create index applications_letters_id_fk
-    on applications (letter_id);
-
-alter table applications
-    add primary key (app_id);
-```
-
-```sql
-create table letters
-(
-    letter_id varchar (255) not null,
-    app_id varchar (255) null,
-    proffname varchar (255) null,
-    proflname varchar (255) null,
-    body text not null,
-    receiver_email varchar (255) not null,
-    constraint letters_letter_id_uindex
-        unique (letter_id),
-    constraint FK_LETTERS_ON_APP
-        foreign key (app_id) references applications (app_id)
-);
-
-alter table letters
-    add primary key (letter_id);
-```
 
 ## Configuration
 
